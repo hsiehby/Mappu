@@ -158,7 +158,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const MapView(),
+        MapView(),
         SafeArea(
             child: buildBottomSheet()
         ),
