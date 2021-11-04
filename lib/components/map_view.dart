@@ -28,7 +28,7 @@ class _MapViewState extends State<MapView> {
       },
       markers: _marker,
       onTap: (latlng) {
-        if (_marker.length >= 1) {
+        if (_marker.isNotEmpty) {
           _marker.clear();
         }
 
@@ -40,18 +40,23 @@ class _MapViewState extends State<MapView> {
   void _onAddMarkerButtonPressed(LatLng latlng) {
     setState(() {
       _marker.add(Marker(
-        markerId: MarkerId(latlng.toString()),
+        markerId: MarkerId("1"),
         position: latlng,
         infoWindow: const InfoWindow(
           title: "Country name",
           snippet: "(Tap again to remove marker)"
         ),
+        draggable: false,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ));
-      
-      _controller.future.then((value) => value.animateCamera(
-        CameraUpdate.newLatLng(latlng)
-      ));
+    });
+
+    _controller.future.then((value) async {
+      value.animateCamera(
+          CameraUpdate.newLatLng(latlng)
+      );
+      await Future.delayed(Duration(seconds: 1));
+      value.showMarkerInfoWindow(MarkerId("1"));
     });
   }
 }
