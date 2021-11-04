@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
@@ -11,6 +12,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
+  final Set<Marker> _marker = {};
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(46.2276, 2.2137),
@@ -25,6 +27,45 @@ class _MapViewState extends State<MapView> {
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
       },
+      markers: _marker,
+      onTap: (latlng) {
+        if (_marker.isNotEmpty) {
+          _marker.clear();
+        }
+
+        _onAddMarkerButtonPressed(latlng);
+      }
     );
+  }
+
+  void _onAddMarkerButtonPressed(LatLng latlng) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
+    String country = newPlace[0].country ?? "Unknown Country";
+
+    setState(() {
+      _marker.add(Marker(
+        markerId: MarkerId("1"),
+        position: latlng,
+        infoWindow: InfoWindow(
+          title: country,
+          snippet: "(Tap again to remove marker)"
+        ),
+        draggable: false,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        onTap: () {
+          setState(() {
+            _marker.clear();
+          });
+        }
+      ));
+    });
+
+    _controller.future.then((value) async {
+      value.animateCamera(
+          CameraUpdate.newLatLng(latlng)
+      );
+      await Future.delayed(Duration(seconds: 1));
+      value.showMarkerInfoWindow(MarkerId("1"));
+    });
   }
 }
