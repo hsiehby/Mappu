@@ -52,6 +52,11 @@ class _MapViewState extends State<MapView> {
         ),
         draggable: false,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        onTap: () {
+          setState(() {
+            _marker.clear();
+          });
+        }
       ));
     });
 
