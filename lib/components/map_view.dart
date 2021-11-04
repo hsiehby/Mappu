@@ -11,6 +11,7 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
+  final Set<Marker> _marker = {};
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(46.2276, 2.2137),
@@ -25,6 +26,27 @@ class _MapViewState extends State<MapView> {
       onMapCreated: (GoogleMapController controller) {
         _controller.complete(controller);
       },
+      markers: _marker,
+      onTap: (latlng) {
+        if (_marker.length >= 1) {
+          _marker.clear();
+        }
+
+        _onAddMarkerButtonPressed(latlng);
+      }
     );
+  }
+
+  void _onAddMarkerButtonPressed(LatLng latlng) {
+    setState(() {
+      _marker.add(Marker(
+        markerId: MarkerId(latlng.toString()),
+        position: latlng,
+        infoWindow: const InfoWindow(
+          title: "A unique marker",
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      ));
+    });
   }
 }
