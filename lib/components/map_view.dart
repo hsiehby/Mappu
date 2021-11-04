@@ -43,9 +43,14 @@ class _MapViewState extends State<MapView> {
         markerId: MarkerId(latlng.toString()),
         position: latlng,
         infoWindow: const InfoWindow(
-          title: "A unique marker",
+          title: "Country name",
+          snippet: "(Tap again to remove marker)"
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      ));
+      
+      _controller.future.then((value) => value.animateCamera(
+        CameraUpdate.newLatLng(latlng)
       ));
     });
   }
