@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
@@ -37,13 +38,16 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  void _onAddMarkerButtonPressed(LatLng latlng) {
+  void _onAddMarkerButtonPressed(LatLng latlng) async {
+    List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
+    String country = newPlace[0].country ?? "Unknown Country";
+
     setState(() {
       _marker.add(Marker(
         markerId: MarkerId("1"),
         position: latlng,
-        infoWindow: const InfoWindow(
-          title: "Country name",
+        infoWindow: InfoWindow(
+          title: country,
           snippet: "(Tap again to remove marker)"
         ),
         draggable: false,
