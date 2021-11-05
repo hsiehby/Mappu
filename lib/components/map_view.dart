@@ -34,16 +34,11 @@ class _MapViewState extends State<MapView> {
       markers: _marker,
       onTap: (latlng) async {
         List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
-        String country = newPlace[0].country ?? "Unknown Country";
+        currCountry = newPlace[0].country ?? "Unknown Country";
 
-        // If country is same as current country, do nothing
-        // If country is "Unknown Country"; continue and notify error to user
-        if (country == "Unknown Country" || country != currCountry) {
-          if (_marker.isNotEmpty) {
-            _marker.clear();
-          }
+        if (_marker.isNotEmpty) {
+          _marker.clear();
         }
-        currCountry = country;
         
         _onAddMarkerButtonPressed(latlng);
       }
