@@ -28,9 +28,13 @@ class NewsAPI {
               pubDate: pubDate,
               source: node.getElement('source')!.text,
               sourceURL: node.getElement('source')!.getAttribute('url')!,
+              articleId: node.getElement('guid')!.text,
             )
         );
+
+        // print(node.getElement('guid')!.text);
       }
+
 
       return articles;
 

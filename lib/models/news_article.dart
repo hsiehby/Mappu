@@ -4,12 +4,14 @@ class NewsArticle {
   late DateTime pubDate;
   late String source;
   late String sourceURL;
+  late String articleId;
 
   NewsArticle({
     required this.title,
     required this.link,
     required this.pubDate,
     required this.source,
-    required this.sourceURL
+    required this.sourceURL,
+    required this.articleId,
   });
 }
