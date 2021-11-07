@@ -4,7 +4,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  final Function updateCountry;
+
+  const MapView({Key? key, required this.updateCountry}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -13,6 +15,8 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _marker = {};
+
+  String currCountry = "";
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(46.2276, 2.2137),
@@ -28,26 +32,27 @@ class _MapViewState extends State<MapView> {
         _controller.complete(controller);
       },
       markers: _marker,
-      onTap: (latlng) {
+      onTap: (latlng) async {
+        List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
+        currCountry = newPlace[0].country ?? "Unknown Country";
+
         if (_marker.isNotEmpty) {
           _marker.clear();
         }
-
+        
         _onAddMarkerButtonPressed(latlng);
       }
     );
   }
 
   void _onAddMarkerButtonPressed(LatLng latlng) async {
-    List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
-    String country = newPlace[0].country ?? "Unknown Country";
 
     setState(() {
       _marker.add(Marker(
         markerId: MarkerId("1"),
         position: latlng,
         infoWindow: InfoWindow(
-          title: country,
+          title: currCountry,
           snippet: "(Tap again to remove marker)"
         ),
         draggable: false,
@@ -55,6 +60,7 @@ class _MapViewState extends State<MapView> {
         onTap: () {
           setState(() {
             _marker.clear();
+            currCountry = "";
           });
         }
       ));
@@ -67,5 +73,7 @@ class _MapViewState extends State<MapView> {
       await Future.delayed(Duration(seconds: 1));
       value.showMarkerInfoWindow(MarkerId("1"));
     });
+
+    widget.updateCountry(currCountry);
   }
 }
