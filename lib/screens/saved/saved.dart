@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mappu/models/news_article.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class SavedWidget extends StatelessWidget {
-  const SavedWidget({Key? key}) : super(key: key);
+class _SavedWidgetState extends State<SavedWidget> {
   static const List<Tab> tabs = <Tab>[
     Tab(text: 'AF'),
     Tab(text: 'AN'),
     Tab(text: 'AS'),
     Tab(text: 'EU'),
+
     Tab(text: 'NA'),
     Tab(text: 'OC'),
     Tab(text: 'SA'),
@@ -43,43 +43,52 @@ class SavedWidget extends StatelessWidget {
 
   ListTile _tile(NewsArticle article) {
     return ListTile(
-      title: Text(article.title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-          )),
-      subtitle: Text(timeago.format(article.pubDate),
-          style: TextStyle(
-            fontSize: 10.0,
-            color: Colors.grey[500],
-          )),
-      leading: Icon(Icons.emoji_flags)
+        title: Text(article.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+            )),
+        subtitle: Text(timeago.format(article.pubDate),
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Colors.grey[500],
+            )),
+        leading: Icon(Icons.emoji_flags)
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: tabs.length,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
+      length: tabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: const TabBar(
               tabs: tabs
-            ),
-            title: const Text('Your Saved Articles'),
           ),
-          body: TabBarView(
-            children: [
-              _buildList(),
-              _buildList(),
-              _buildList(),
-              _buildList(),
-              _buildList(),
-              _buildList(),
-              _buildList(),
-            ],
-          ),
+          title: const Text('Your Saved Articles'),
         ),
-      );
+        body: TabBarView(
+          children: [
+            _buildList(),
+            _buildList(),
+            _buildList(),
+            _buildList(),
+            _buildList(),
+            _buildList(),
+            _buildList(),
+          ],
+        ),
+      ),
+    );
   }
+
+}
+
+
+class SavedWidget extends StatefulWidget {
+  const SavedWidget({Key? key}) : super(key: key);
+
+  @override
+  _SavedWidgetState createState() => _SavedWidgetState();
 }
