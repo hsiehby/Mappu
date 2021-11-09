@@ -35,17 +35,18 @@ class DatabaseHelper {
           'savedAt TEXT)',
     );
 
-    await db.execute(
-      'CREATE TABLE readArticles('
-          'articleId TEXT PRIMARY KEY'
-          'readAt TEXT)',
-    );
-
-    await db.execute(
-      'CREATE TABLE exploredCountries('
-          'countryId TEXT PRIMARY KEY'
-          'exploredAt TEXT)',
-    );
+    // TODO create table error
+    // await db.execute(
+    //   'CREATE TABLE readArticles('
+    //       'articleId TEXT PRIMARY KEY'
+    //       'readAt TEXT)',
+    // );
+    //
+    // await db.execute(
+    //   'CREATE TABLE exploredCountries('
+    //       'countryId TEXT PRIMARY KEY'
+    //       'exploredAt TEXT)',
+    // );
   }
 
   Future close() async {
