@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mappu/main.dart';
 
 class MapView extends StatefulWidget {
   final Function updateCountry;
@@ -16,6 +18,7 @@ class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _marker = {};
 
+  late FToast fToast;
   String currCountry = "";
 
   static const CameraPosition _initialPosition = CameraPosition(
@@ -24,24 +27,39 @@ class _MapViewState extends State<MapView> {
   );
 
   @override
+  void initState() {
+    fToast = FToast();
+    fToast.init(globalKey.currentState!.context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _initialPosition,
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-      },
-      markers: _marker,
-      onTap: (latlng) async {
-        List<Placemark> newPlace = await placemarkFromCoordinates(latlng.latitude, latlng.longitude);
-        currCountry = newPlace[0].country ?? "Unknown Country";
+        mapType: MapType.normal,
+        initialCameraPosition: _initialPosition,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        markers: _marker,
+        onTap: (latlng) async {
+          try {
+            List<Placemark> newPlace = await placemarkFromCoordinates(
+                latlng.latitude, latlng.longitude);
+            if (newPlace[0].country == null || newPlace[0].country!.isEmpty) {
+              throw Exception();
+            }
 
-        if (_marker.isNotEmpty) {
-          _marker.clear();
+            currCountry = newPlace[0].country ?? "Unknown Country";
+
+            if (_marker.isNotEmpty) {
+              _marker.clear();
+            }
+
+            _onAddMarkerButtonPressed(latlng);
+          } catch (err) {
+            _showToast();
+          }
         }
-        
-        _onAddMarkerButtonPressed(latlng);
-      }
     );
   }
 
@@ -60,7 +78,8 @@ class _MapViewState extends State<MapView> {
         onTap: () {
           setState(() {
             _marker.clear();
-            currCountry = "";
+            currCountry = "Unknown Country";
+            widget.updateCountry(currCountry);
           });
         }
       ));
@@ -75,5 +94,34 @@ class _MapViewState extends State<MapView> {
     });
 
     widget.updateCountry(currCountry);
+  }
+
+  _showToast() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.redAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.block, color: Colors.white,),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("Invalid Country",
+            style: TextStyle(
+              color: Colors.white,
+            ),),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
   }
 }
