@@ -1,3 +1,5 @@
+import 'package:mappu/models/news_article.dart';
+
 class SavedArticle {
   late String articleId;
   late String title;
@@ -18,6 +20,17 @@ class SavedArticle {
     required this.countryId,
     required this.savedAt,
   });
+
+  SavedArticle.withNewsArticle(NewsArticle article, String location) {
+    articleId = article.articleId;
+    title = article.title;
+    link = article.link;
+    pubDate = article.pubDate;
+    source = article.source;
+    sourceURL = article.sourceURL;
+    countryId = location;
+    savedAt = DateTime.now();
+  }
 
   Map<String, dynamic> toMap() {
     return {

@@ -46,16 +46,6 @@ class _SavedListState extends State<SavedList> {
   void initState() {
     super.initState();
 
-    dbHelper.insertSavedArticle(
-        SavedArticle(articleId: 'CAIiEFMihBT82FS05z6fggz80FoqFwgEKg4IACoGCAowl6p7MN-zCTDZ4PsF',
-            title: 'Death row inmates sue over Japan\'s brief notice of execution',
-            link: 'https://news.google.com/__i/rss/rd/articles/CBMieGh0dHBzOi8vd3d3LnRoZWd1YXJkaWFuLmNvbS93b3JsZC8yMDIxL25vdi8wNS9qYXBhbi1kZWF0aC1yb3ctaW5tYXRlcy1zdWUtb3Zlci1zYW1lLWRheS1ub3RpZmljYXRpb24tb2YtZXhlY3V0aW9uLXJlcG9ydNIBeGh0dHBzOi8vYW1wLnRoZWd1YXJkaWFuLmNvbS93b3JsZC8yMDIxL25vdi8wNS9qYXBhbi1kZWF0aC1yb3ctaW5tYXRlcy1zdWUtb3Zlci1zYW1lLWRheS1ub3RpZmljYXRpb24tb2YtZXhlY3V0aW9uLXJlcG9ydA?oc=5',
-            pubDate: DateTime(2021,11,05),
-            source: 'The Guardian',
-            sourceURL: 'https://www.theguardian.com',
-            countryId: 'JP',
-            savedAt: DateTime(2021,11,08)));
-
     dbHelper.getSavedArticles()
         .then((data) {
           setState(() {

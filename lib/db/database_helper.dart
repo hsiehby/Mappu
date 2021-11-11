@@ -35,7 +35,7 @@ class DatabaseHelper {
           'savedAt TEXT)',
     );
 
-    // TODO create table error
+    // TODO fix create table error
     // await db.execute(
     //   'CREATE TABLE readArticles('
     //       'articleId TEXT PRIMARY KEY'
@@ -68,7 +68,7 @@ class DatabaseHelper {
   Future<List<SavedArticle>> getSavedArticles() async {
     final db = await instance.database;
 
-    final List<Map<String, dynamic>> maps = await db.query('savedArticles');
+    final List<Map<String, dynamic>> maps = await db.query('savedArticles', orderBy: 'savedAt DESC');
 
     return List.generate(maps.length, (i) {
       return SavedArticle(
