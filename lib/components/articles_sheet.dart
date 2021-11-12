@@ -111,14 +111,23 @@ class ArticlesSheet extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(
+              location == "Unknown Country" ? const Text(
+                  "Explore Recommendations",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  )
+              )
+                  : Flexible(
                   child: Text(
-                      "Trending in ${location.toTitleCase()}",
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      )
+                    "Trending in ${location.toTitleCase()}",
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 20,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   )
               )
             ],
