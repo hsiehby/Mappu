@@ -4,6 +4,8 @@ import 'screens/saved/saved.dart';
 import 'screens/passport/passport.dart';
 import 'package:flutter_config/flutter_config.dart';
 
+GlobalKey globalKey = GlobalKey();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables(); // Load .env which includes API keys
@@ -30,6 +32,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalKey,
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,

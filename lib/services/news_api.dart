@@ -12,7 +12,7 @@ class NewsAPI {
     List<NewsArticle> articles = <NewsArticle>[];
     try {
 
-      Response response = await get(Uri.parse('https://news.google.com/rss/headlines/section/geo/$location'));
+      Response response = await getArticles();
       final document = XmlDocument.parse(response.body);
       // print(document);
       final items = document.findAllElements('item');
@@ -28,15 +28,27 @@ class NewsAPI {
               pubDate: pubDate,
               source: node.getElement('source')!.text,
               sourceURL: node.getElement('source')!.getAttribute('url')!,
+              articleId: node.getElement('guid')!.text,
             )
         );
+
+        // print(node.getElement('guid')!.text);
       }
+
 
       return articles;
 
     } catch (e) {
       print("Caught error: $e");
       return articles;
+    }
+  }
+
+  Future<Response> getArticles() async {
+    if (location == "Unknown Country") {
+      return get(Uri.parse('https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'));
+    } else {
+      return get(Uri.parse('https://news.google.com/rss/headlines/section/geo/$location'));
     }
   }
 }

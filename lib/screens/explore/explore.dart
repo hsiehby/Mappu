@@ -21,7 +21,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   final FloatingSearchBarController searchBarController = FloatingSearchBarController();
 
   List<NewsArticle> articles = <NewsArticle>[];
-  String location = "Japan";
+  String location = "Unknown Country";
 
   Widget articleItemBuilder(context, index) {
     return Padding(
@@ -93,6 +93,48 @@ class _ExploreWidgetState extends State<ExploreWidget> {
     });
   }
 
+  Widget buildHeaderForList() {
+    return IgnorePointer(
+      child: Column (
+        children: [
+          Container(
+              width: 32.0,
+              height: 5.0,
+              margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 0),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(5.0),
+              )
+          ),
+          Row(
+            children: [
+              location == "Unknown Country" ? const Text(
+                  "Explore Recommendations",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  )
+              )
+              : Flexible(
+                  child: Text(
+                      "Trending in ${location.toTitleCase()}",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                  )
+              )
+            ],
+          ),
+          const SizedBox(height: 16.0,),
+        ],
+      ),
+    );
+  }
+
   Widget buildBottomSheet() {
     return DraggableScrollableSheet(
         initialChildSize: 0.3,
@@ -113,38 +155,16 @@ class _ExploreWidgetState extends State<ExploreWidget> {
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-              child: Column(
+              child: Stack(
                 children: [
-                  Container(
-                      width: 32.0,
-                      height: 5.0,
-                      margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(5.0),
-                      )
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                          "Trending in ${location.toTitleCase()}",
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 20,
-                          )
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  Expanded(
-                    flex: 1,
-                    child: ListView.separated(
+                    ListView.separated(
                         itemCount: articles.length,
                         controller: scrollController,
-                        itemBuilder: articleItemBuilder,
+                        itemBuilder: (BuildContext context, int index) {
+                          return index == 0 ? buildHeaderForList()
+                            : articleItemBuilder(context, index - 1);
+                        },
                         separatorBuilder: (BuildContext context, int index) => const Divider(height: 8.0)
-                    ),
                   ),
                 ],
               ),
@@ -154,11 +174,26 @@ class _ExploreWidgetState extends State<ExploreWidget> {
     );
   }
 
+  updateLocation(String country) {
+    // Skip if country already loaded
+    if (location == country) { return; }
+
+    location = country;
+
+    NewsAPI(location: location)
+        .getData()
+        .then((data) {
+      setState(() {
+        articles = data;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MapView(),
+        MapView(updateCountry: updateLocation,),
         SafeArea(
             child: buildBottomSheet()
         ),
