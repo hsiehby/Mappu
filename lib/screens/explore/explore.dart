@@ -21,7 +21,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   final FloatingSearchBarController searchBarController = FloatingSearchBarController();
 
   List<NewsArticle> articles = <NewsArticle>[];
-  String location = "Japan";
+  String location = "Unknown Country";
 
   Widget articleItemBuilder(context, index) {
     return Padding(
@@ -108,12 +108,23 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           ),
           Row(
             children: [
-              Text(
-                  "Trending in ${location.toTitleCase()}",
+              location == "Unknown Country" ? const Text(
+                  "Explore Recommendations",
                   textAlign: TextAlign.start,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
+                  )
+              )
+              : Flexible(
+                  child: Text(
+                      "Trending in ${location.toTitleCase()}",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                   )
               )
             ],
