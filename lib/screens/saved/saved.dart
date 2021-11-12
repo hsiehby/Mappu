@@ -66,7 +66,7 @@ class _SavedListState extends State<SavedList> {
               fontSize: 10.0,
               color: Colors.grey[500],
             )),
-        leading: Icon(Icons.emoji_flags)
+        leading: const Icon(Icons.emoji_flags)
     );
   }
 

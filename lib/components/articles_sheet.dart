@@ -18,7 +18,7 @@ class ArticlesSheet extends StatelessWidget {
   final List<NewsArticle> articles;
   final String location;
 
-  saveArticle(NewsArticle article, String location) {
+  _saveArticle(NewsArticle article, String location) {
     final dbHelper = DatabaseHelper.instance;
     dbHelper.insertSavedArticle(
       SavedArticle.withNewsArticle(article, location)
@@ -26,8 +26,6 @@ class ArticlesSheet extends StatelessWidget {
   }
 
   Widget articleItemBuilder(context, index) {
-
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 4.0, 4.0, 4.0),
       child: Slidable(
@@ -37,7 +35,7 @@ class ArticlesSheet extends StatelessWidget {
           IconSlideAction(
             caption: 'Save',
             icon: Icons.bookmark_border,
-            onTap: () => saveArticle(articles[index], location),
+            onTap: () => _saveArticle(articles[index], location),
           )
         ],
         actionExtentRatio: 0.25,
