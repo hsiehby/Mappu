@@ -1,0 +1,7 @@
+[
+  {"stampId":"test1","name":"Beginner","description":"Earn this stamp by reading your first article","iconPath":"assets/stamps/natural-brown.png","earned":true,"earnedAt":"2021-09-25T00:00:00.000Z"},
+  {"stampId":"test1","name":"Traveler","description":"Earn this stamp by exploring at least 3 countries","iconPath":"assets/stamps/mountain.png","earned":false,"earnedAt":null},
+  {"stampId":"test2","name":"Sailor","description":"Earn this stamp by exploring at least 10 countries","iconPath":"assets/stamps/natural.png","earned":false,"earnedAt":null},
+  {"stampId":"test3","name":"Adventurer","description":"Earn this stamp by exploring at least 30 countries","iconPath":"assets/stamps/forest.jpeg","earned":false,"earnedAt":null},
+  {"stampId":"test3","name":"Expeditioner","description":"Earn this stamp by exploring at least 100 countries","iconPath":"assets/stamps/city.png","earned":false,"earnedAt":null}
+]
