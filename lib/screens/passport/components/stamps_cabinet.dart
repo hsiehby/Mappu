@@ -12,8 +12,9 @@ class StampsCabinet extends StatefulWidget {
 }
 
 class _StampsCabinetState extends State<StampsCabinet> {
+  List<Stamp> _stamps = [];
+
   Future<void> loadStamps() async {
-    // await Future.delayed(Duration(seconds: 1));
     if (_stamps.isEmpty) {
       final String response = await rootBundle.loadString('assets/stamps/stamps.json');
       final data = await jsonDecode(response);
@@ -23,35 +24,6 @@ class _StampsCabinetState extends State<StampsCabinet> {
       });
     }
   }
-
-  List<Stamp> _stamps = [];
-
-  // final List<Stamp> _stamps = [
-  //   Stamp(stampId: 'test1',
-  //       name: 'Traveler',
-  //       description: 'Earn this stamp by exploring at least 3 countries',
-  //       earned: true,
-  //       earnedAt: DateTime.utc(2021, 9, 25),
-  //       iconPath: 'assets/stamps/mountain.png'),
-  //   Stamp(stampId: 'test2',
-  //       name: 'Sailor',
-  //       description: 'Earn this stamp by exploring at least 10 countries',
-  //       earned: true,
-  //       earnedAt: DateTime.utc(2021, 10, 19),
-  //       iconPath: 'assets/stamps/natural.png'),
-  //   Stamp(stampId: 'test3',
-  //       name: 'Adventurer',
-  //       description: 'Earn this stamp by exploring at least 30 countries',
-  //       earned: false,
-  //       earnedAt: null,
-  //       iconPath: 'assets/stamps/forest.jpeg'),
-  //   Stamp(stampId: 'test3',
-  //       name: 'Expeditioner',
-  //       description: 'Earn this stamp by exploring at least 100 countries',
-  //       earned: false,
-  //       earnedAt: null,
-  //       iconPath: 'assets/stamps/city.png'),
-  // ];
   
   Widget buildStamp(int index) {
     return Column(
@@ -120,24 +92,6 @@ class _StampsCabinetState extends State<StampsCabinet> {
       }
     );
   }
-
-  // List<Widget> buildStampsList() {
-  //   return List.generate(_stamps.length, (index) {
-  //     String message = _stamps[index].earned ?
-  //       _stamps[index].description +
-  //           '\nEarned at: ${_stamps[index].earnedAt!.year}-'
-  //               '${_stamps[index].earnedAt!.month}-${_stamps[index].earnedAt!.day}'
-  //       : _stamps[index].description;
-  //     return Tooltip(
-  //       decoration: BoxDecoration(
-  //         color: Colors.green.withOpacity(0.9),
-  //         borderRadius: const BorderRadius.all(Radius.circular(4)),
-  //       ),
-  //       message: message,
-  //       child: buildStamp(index),
-  //     );
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
