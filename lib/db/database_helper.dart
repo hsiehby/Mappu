@@ -35,17 +35,18 @@ class DatabaseHelper {
           'savedAt TEXT)',
     );
 
-    await db.execute(
-      'CREATE TABLE readArticles('
-          'articleId TEXT PRIMARY KEY'
-          'readAt TEXT)',
-    );
-
-    await db.execute(
-      'CREATE TABLE exploredCountries('
-          'countryId TEXT PRIMARY KEY'
-          'exploredAt TEXT)',
-    );
+    // TODO fix create table error
+    // await db.execute(
+    //   'CREATE TABLE readArticles('
+    //       'articleId TEXT PRIMARY KEY'
+    //       'readAt TEXT)',
+    // );
+    //
+    // await db.execute(
+    //   'CREATE TABLE exploredCountries('
+    //       'countryId TEXT PRIMARY KEY'
+    //       'exploredAt TEXT)',
+    // );
   }
 
   Future close() async {
@@ -67,7 +68,7 @@ class DatabaseHelper {
   Future<List<SavedArticle>> getSavedArticles() async {
     final db = await instance.database;
 
-    final List<Map<String, dynamic>> maps = await db.query('savedArticles');
+    final List<Map<String, dynamic>> maps = await db.query('savedArticles', orderBy: 'savedAt DESC');
 
     return List.generate(maps.length, (i) {
       return SavedArticle(
