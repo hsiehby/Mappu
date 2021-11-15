@@ -99,7 +99,9 @@ class _StampsCabinetState extends State<StampsCabinet> {
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+            padding: EdgeInsets.fromLTRB(0, 175, 0, 20),
+            //Changed the top side padding to orient on passport page for now
+            //Need to change literal ints to variables based on size of device if we care about it looking good on any phone
             child: Align(alignment: Alignment.center,
                 child: Text("Stamps Cabinet", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),)),
           ),
