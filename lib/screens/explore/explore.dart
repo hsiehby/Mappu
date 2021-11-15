@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mappu/components/articles_sheet.dart';
 import 'package:mappu/services/news_api.dart';
 import 'package:mappu/models/news_article.dart';
@@ -7,6 +8,7 @@ import 'package:mappu/components/search_bar.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:mappu/components/map_view.dart';
+import 'package:mappu/main.dart';
 
 class ExploreWidget extends StatefulWidget {
   const ExploreWidget({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
 
   List<NewsArticle> articles = <NewsArticle>[];
   String location = "Unknown Country";
+  late FToast fToast;
 
   @override
   void initState() {
@@ -34,6 +37,9 @@ class _ExploreWidgetState extends State<ExploreWidget> {
         articles = data;
       });
     });
+
+    fToast = FToast();
+    fToast.init(globalKey.currentState!.context);
   }
 
   updateLocation(String country) {
@@ -51,13 +57,45 @@ class _ExploreWidgetState extends State<ExploreWidget> {
     });
   }
 
+  showToast(Color color, IconData icon, String text) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: color,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white,),
+          const SizedBox(
+            width: 12.0,
+          ),
+          Text(text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MapView(updateCountry: updateLocation,),
+        MapView(updateCountry: updateLocation, showToast: showToast),
         SafeArea(
-            child: ArticlesSheet(browser: browser, articles: articles, location: location,)
+            child: ArticlesSheet(browser: browser,
+              articles: articles,
+              location: location,
+              showToast: showToast,)
         ),
         SearchBar(
           controller: searchBarController,

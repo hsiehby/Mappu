@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mappu/main.dart';
 
 class MapView extends StatefulWidget {
-  final Function updateCountry;
+  final Function updateCountry, showToast;
 
-  const MapView({Key? key, required this.updateCountry}) : super(key: key);
+  const MapView({Key? key, required this.updateCountry, required this.showToast}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -18,19 +16,12 @@ class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _marker = {};
 
-  late FToast fToast;
   String currCountry = "";
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(46.2276, 2.2137),
     zoom: 4,
   );
-
-  @override
-  void initState() {
-    fToast = FToast();
-    fToast.init(globalKey.currentState!.context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +48,7 @@ class _MapViewState extends State<MapView> {
 
             _onAddMarkerButtonPressed(latlng);
           } catch (err) {
-            _showToast();
+            widget.showToast(Colors.redAccent, Icons.block, "Invalid Location");
           }
         }
     );
@@ -94,34 +85,5 @@ class _MapViewState extends State<MapView> {
     });
 
     widget.updateCountry(currCountry);
-  }
-
-  _showToast() {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.redAccent,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(Icons.block, color: Colors.white,),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text("Invalid Country",
-            style: TextStyle(
-              color: Colors.white,
-            ),),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: Duration(seconds: 2),
-    );
   }
 }

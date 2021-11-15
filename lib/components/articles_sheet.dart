@@ -12,17 +12,20 @@ class ArticlesSheet extends StatelessWidget {
   const ArticlesSheet({Key? key,
     required this.browser,
     required this.articles,
-    required this.location}) : super(key: key);
+    required this.location,
+    required this.showToast}) : super(key: key);
 
   final ChromeSafariBrowser browser;
   final List<NewsArticle> articles;
   final String location;
+  final Function showToast;
 
   _saveArticle(NewsArticle article, String location) {
     final dbHelper = DatabaseHelper.instance;
     dbHelper.insertSavedArticle(
       SavedArticle.withNewsArticle(article, location)
     );
+    showToast(Colors.grey, Icons.bookmark_border, "Saved");
   }
 
   Widget articleItemBuilder(context, index) {
