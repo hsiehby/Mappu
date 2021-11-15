@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:mappu/components/article_reader.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -34,7 +36,8 @@ class SavedWidget extends StatelessWidget {
 
 class SavedList extends StatefulWidget {
   final String continent;
-  const SavedList({Key? key, required this.continent}) : super(key: key);
+  final ChromeSafariBrowser browser = ArticleReader();
+  SavedList({Key? key, required this.continent}) : super(key: key);
 
   @override
   _SavedListState createState() => _SavedListState();
@@ -68,7 +71,15 @@ class _SavedListState extends State<SavedList> {
               fontSize: 10.0,
               color: Colors.grey[500],
             )),
-        leading: const Icon(Icons.emoji_flags)
+        leading: const Icon(Icons.emoji_flags),
+        onTap: () async {
+          await widget.browser.open(
+              url: Uri.parse(article.link),
+              options: ChromeSafariBrowserClassOptions(
+                  android: AndroidChromeCustomTabsOptions(
+                      addDefaultShareMenuItem: false),
+                  ios: IOSSafariOptions(barCollapsingEnabled: true)));
+        },
     );
   }
 
