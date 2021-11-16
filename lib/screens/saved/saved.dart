@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:mappu/components/article_reader.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'country_to_continent.dart' as c_to_c;
 
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
-  static const List<String> continents = ['AF','AN','AS','EU','NA','OC','SA'];
+  static const List<String> continents = ['Asia','Europe','North America','Australia','Africa','Antarctica', 'South America'];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,8 @@ class SavedWidget extends StatelessWidget {
           bottom: TabBar(
               tabs: List<Widget>.generate(continents.length, (int index) {
                 return Tab(text: continents[index]);
-              })
+              }),
+              isScrollable: true,
           ),
           title: const Text('Your Saved Articles'),
         ),
@@ -32,7 +36,8 @@ class SavedWidget extends StatelessWidget {
 
 class SavedList extends StatefulWidget {
   final String continent;
-  const SavedList({Key? key, required this.continent}) : super(key: key);
+  final ChromeSafariBrowser browser = ArticleReader();
+  SavedList({Key? key, required this.continent}) : super(key: key);
 
   @override
   _SavedListState createState() => _SavedListState();
@@ -49,7 +54,7 @@ class _SavedListState extends State<SavedList> {
     dbHelper.getSavedArticles()
         .then((data) {
           setState(() {
-            articles = data;
+            articles = data.where((i) => c_to_c.countryToContinent[i.countryId] == widget.continent).toList();
           });
     });
   }
@@ -66,7 +71,15 @@ class _SavedListState extends State<SavedList> {
               fontSize: 10.0,
               color: Colors.grey[500],
             )),
-        leading: const Icon(Icons.emoji_flags)
+        leading: const Icon(Icons.emoji_flags),
+        onTap: () async {
+          await widget.browser.open(
+              url: Uri.parse(article.link),
+              options: ChromeSafariBrowserClassOptions(
+                  android: AndroidChromeCustomTabsOptions(
+                      addDefaultShareMenuItem: false),
+                  ios: IOSSafariOptions(barCollapsingEnabled: true)));
+        },
     );
   }
 
