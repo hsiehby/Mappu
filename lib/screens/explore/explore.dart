@@ -101,17 +101,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           controller: searchBarController,
           setValue: (String s) {
             // Update location and fetch articles
-            setState(() {
-              location = s.toLowerCase();
-            });
-
-            NewsAPI(location: location)
-                .getData()
-                .then((data) {
-              setState(() {
-                articles = data;
-              });
-            });
+            updateLocation(s);
 
             // Close search bar on submit
             if (searchBarController.isOpen) {

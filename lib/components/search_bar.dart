@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mappu/data/country_to_latlng.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import '../data/country_to_continent.dart' as c_to_c;
 
 class SearchBar extends StatefulWidget {
   final void Function(String) setValue;

@@ -4,7 +4,7 @@ import 'package:mappu/components/article_reader.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'country_to_continent.dart' as c_to_c;
+import '../../data/country_to_continent.dart' as c_to_c;
 
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
