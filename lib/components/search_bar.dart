@@ -18,6 +18,8 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
+    var countrySuggestions = countryList;
+
     return FloatingSearchBar(
       hint: 'Search...',
       clearQueryOnClose: false,
@@ -61,16 +63,22 @@ class _SearchBarState extends State<SearchBar> {
       builder: (context, transition) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Colors.white,
-            elevation: 4.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
-              }).toList(),
+          child: SingleChildScrollView(
+            child: Material(
+              color: Colors.white,
+              elevation: 4.0,
+              child: ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: countrySuggestions.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(countrySuggestions[index]),
+                  );
+                },
+              ),
             ),
-          ),
+          )
         );
       },
     );
