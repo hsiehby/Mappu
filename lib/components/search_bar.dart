@@ -83,6 +83,9 @@ class _SearchBarState extends State<SearchBar> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(countrySuggestions[index]),
+                    onTap: () {
+                      widget.setValue(countrySuggestions[index]);
+                    },
                   );
                 },
               ),
