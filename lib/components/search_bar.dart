@@ -14,11 +14,11 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
 
+  var countrySuggestions = [];
+
   @override
   Widget build(BuildContext context) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-
-    var countrySuggestions = countryList;
 
     return FloatingSearchBar(
       hint: 'Search...',
@@ -35,6 +35,14 @@ class _SearchBarState extends State<SearchBar> {
       controller: widget.controller,
       onQueryChanged: (query) {
         // Call your model, bloc, controller here.
+        setState(() {
+          if (query.trim() != '') {
+            countrySuggestions = countryList.where((country) =>
+                country.toLowerCase().startsWith(query.trim().toLowerCase())).toList();
+          } else {
+            countrySuggestions = countryList;
+          }
+        });
       },
       onSubmitted: (String value) {
         widget.setValue(value);
@@ -68,6 +76,7 @@ class _SearchBarState extends State<SearchBar> {
               color: Colors.white,
               elevation: 4.0,
               child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: countrySuggestions.length,
