@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mappu/components/articles_sheet.dart';
 import 'package:mappu/services/news_api.dart';
 import 'package:mappu/models/news_article.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:mappu/components/map_view.dart';
 import 'package:mappu/main.dart';
+
+const NO_LAT_LNG = LatLng(90, 91);
 
 class ExploreWidget extends StatefulWidget {
   const ExploreWidget({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
 
   List<NewsArticle> articles = <NewsArticle>[];
   String location = "Unknown Country";
+  LatLng latLng = NO_LAT_LNG;
   late FToast fToast;
 
   @override
@@ -42,11 +46,12 @@ class _ExploreWidgetState extends State<ExploreWidget> {
     fToast.init(globalKey.currentState!.context);
   }
 
-  updateLocation(String country) {
+  updateLocation(String country, LatLng newLatLng) {
     // Skip if country already loaded
     if (location == country) { return; }
 
     location = country;
+    latLng = newLatLng;
 
     NewsAPI(location: location)
         .getData()
@@ -90,7 +95,8 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        MapView(updateCountry: updateLocation, showToast: showToast),
+        MapView(updateCountry: updateLocation, showToast: showToast,
+            location: location, latLng: latLng),
         SafeArea(
             child: ArticlesSheet(browser: browser,
               articles: articles,
@@ -99,9 +105,9 @@ class _ExploreWidgetState extends State<ExploreWidget> {
         ),
         SearchBar(
           controller: searchBarController,
-          setValue: (String s) {
+          setValue: (String s, LatLng latlng) {
             // Update location and fetch articles
-            updateLocation(s);
+            updateLocation(s, latlng);
 
             // Close search bar on submit
             if (searchBarController.isOpen) {

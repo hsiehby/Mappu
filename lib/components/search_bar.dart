@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mappu/data/country_to_latlng.dart';
+import 'package:mappu/screens/explore/explore.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import '../data/country_to_continent.dart' as c_to_c;
 
 class SearchBar extends StatefulWidget {
-  final void Function(String) setValue;
+  final void Function(String, LatLng) setValue;
   final FloatingSearchBarController controller;
   const SearchBar({Key? key, required this.setValue, required this.controller }) : super(key: key);
 
@@ -45,7 +47,7 @@ class _SearchBarState extends State<SearchBar> {
         });
       },
       onSubmitted: (String value) {
-        widget.setValue(value);
+        widget.setValue(value, NO_LAT_LNG);
         // print(this);
         // if (FloatingSearchBar.of(context)!.isOpen) {
         //   FloatingSearchBar.of(context)!.close();
@@ -84,7 +86,7 @@ class _SearchBarState extends State<SearchBar> {
                   return ListTile(
                     title: Text(countrySuggestions[index]),
                     onTap: () {
-                      widget.setValue(countrySuggestions[index]);
+                      widget.setValue(countrySuggestions[index], testMap[countrySuggestions[index]] ?? NO_LAT_LNG);
                     },
                   );
                 },
