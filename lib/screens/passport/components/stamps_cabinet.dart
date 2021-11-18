@@ -32,34 +32,23 @@ class _StampsCabinetState extends State<StampsCabinet> {
             return buildPostcardDetailsView(context, index);
           });
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              foregroundDecoration: _stamps[index].earned ? null
-                  : const BoxDecoration(
-                color: Colors.grey,
-                backgroundBlendMode: BlendMode.saturation,
-              ),
-              child: Opacity(
-                  opacity: _stamps[index].earned ? 1.0 : 0.30,
-                  child: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage(_stamps[index].iconPath)
-                  )
-              ),
-            ),
+      child: Padding(
+        // padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
+        child: Container(
+          foregroundDecoration: _stamps[index].earned ? null
+              : const BoxDecoration(
+            color: Colors.grey,
+            backgroundBlendMode: BlendMode.saturation,
           ),
-          Text(_stamps[index].name,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600
-            ),
+          child: Opacity(
+              opacity: _stamps[index].earned ? 1.0 : 0.30,
+              child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage(_stamps[index].iconPath)
+              )
           ),
-        ],
+        ),
       ),
     );
   }
@@ -78,7 +67,7 @@ class _StampsCabinetState extends State<StampsCabinet> {
         } else {
           return GridView.count(
             crossAxisCount: 3,
-            childAspectRatio: 0.85,
+            childAspectRatio: 0.9,
             children: List.generate(_stamps.length, (index) {
               String message = _stamps[index].earned ?
               _stamps[index].description +
