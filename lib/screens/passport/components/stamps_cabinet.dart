@@ -95,16 +95,15 @@ class _StampsCabinetState extends State<StampsCabinet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Postcards"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0.0,
+      ),
+      body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 175, 0, 20),
-            //Changed the top side padding to orient on passport page for now
-            //Need to change literal ints to variables based on size of device if we care about it looking good on any phone
-            child: Align(alignment: Alignment.center,
-                child: Text("Stamps Cabinet", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),)),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),

@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mappu/models/stamp.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mappu/screens/passport/components/stamps_cabinet.dart';
 
 class StampsPreview extends StatefulWidget {
   const StampsPreview({Key? key}) : super(key: key);
@@ -102,7 +101,12 @@ class _StampsPreviewState extends State<StampsPreview> {
                   style: TextButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 18.0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StampsCabinet()),
+                    );
+                  },
                   child: const Text('View All'),
                 ),
               ),
