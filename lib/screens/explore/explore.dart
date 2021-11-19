@@ -27,6 +27,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   List<NewsArticle> articles = <NewsArticle>[];
   String location = "Unknown Country";
   LatLng latLng = NO_LAT_LNG;
+  bool fromSearch = false;
   late FToast fToast;
 
   @override
@@ -60,6 +61,10 @@ class _ExploreWidgetState extends State<ExploreWidget> {
         articles = data;
       });
     });
+  }
+
+  setFromSearchFalse() {
+    fromSearch = false;
   }
 
   showToast(Color color, IconData icon, String text) {
@@ -96,7 +101,8 @@ class _ExploreWidgetState extends State<ExploreWidget> {
     return Stack(
       children: [
         MapView(updateCountry: updateLocation, showToast: showToast,
-            location: location, latLng: latLng),
+            location: location, latLng: latLng, fromSearch: fromSearch,
+            setFromSearchFalse: setFromSearchFalse,),
         SafeArea(
             child: ArticlesSheet(browser: browser,
               articles: articles,
@@ -107,7 +113,17 @@ class _ExploreWidgetState extends State<ExploreWidget> {
           controller: searchBarController,
           setValue: (String s, LatLng latlng) {
             // Update location and fetch articles
-            updateLocation(s, latlng);
+            location = s;
+            latLng = latlng;
+            fromSearch = true;
+
+            NewsAPI(location: location)
+                .getData()
+                .then((data) {
+              setState(() {
+                articles = data;
+              });
+            });
 
             // Close search bar on submit
             if (searchBarController.isOpen) {
