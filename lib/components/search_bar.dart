@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mappu/data/country_to_latlng.dart';
+import 'package:mappu/screens/explore/explore.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import '../data/country_to_continent.dart' as c_to_c;
 
 class SearchBar extends StatefulWidget {
-  final void Function(String) setValue;
+  final void Function(String, LatLng) setValue;
+  final void Function(Color, IconData, String) showToast;
   final FloatingSearchBarController controller;
-  const SearchBar({Key? key, required this.setValue, required this.controller }) : super(key: key);
+  const SearchBar({Key? key, required this.setValue, required this.controller,
+    required this.showToast }) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
+
+  var countrySuggestions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +39,23 @@ class _SearchBarState extends State<SearchBar> {
       controller: widget.controller,
       onQueryChanged: (query) {
         // Call your model, bloc, controller here.
+        setState(() {
+          if (query.trim() != '') {
+            countrySuggestions = countryList.where((country) =>
+                country.toLowerCase().startsWith(query.trim().toLowerCase())).toList();
+          } else {
+            countrySuggestions = countryList;
+          }
+        });
       },
       onSubmitted: (String value) {
-        widget.setValue(value);
-        // print(this);
-        // if (FloatingSearchBar.of(context)!.isOpen) {
-        //   FloatingSearchBar.of(context)!.close();
-        // }
+        final int numValues = countryList.where((country) =>
+            country == value).length;
+        if (numValues == 1) {
+          widget.setValue(value, testMap[value] ?? NO_LAT_LNG);
+        } else {
+          widget.showToast(Colors.deepOrange, Icons.block, "Invalid Location");
+        }
       },
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
@@ -52,70 +70,6 @@ class _SearchBarState extends State<SearchBar> {
         ),
       ],
       actions: [
-        FloatingSearchBarAction(
-            showIfOpened: false,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 36.0),
-              child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(
-                      Icons.flag,
-                      color: Colors.deepOrangeAccent,
-                      size: 18.0,
-                    ),
-                    Positioned(
-                        top: 10.0 ,
-                        left: 18.0,
-                        child: Text(
-                            "14",
-                            style: TextStyle(
-                              fontSize: 10.0,
-                              color: Colors.grey.shade700,
-                            )
-                        )
-                    ),
-                  ]
-              ),
-            )
-        ),
-        FloatingSearchBarAction(
-            showIfOpened: false,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minWidth: 36.0),
-              child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(
-                      Icons.article,
-                      color: Colors.amber,
-                      size: 18.0,
-                    ),
-                    Positioned(
-                        top: 10.0 ,
-                        left: 18.0,
-                        child: Text(
-                            "128",
-                            style: TextStyle(
-                              fontSize: 10.0,
-                              color: Colors.grey.shade700,
-                            )
-                        )
-                    ),
-                  ]
-              ),
-            )
-        ),
-        FloatingSearchBarAction(
-          showIfOpened: false,
-          child: CircularButton(
-            icon: Icon(
-              Icons.person,
-              color: Colors.grey.shade700,
-            ),
-            onPressed: () {},
-          ),
-        ),
         FloatingSearchBarAction.searchToClear(
           showIfClosed: false,
         ),
@@ -123,16 +77,26 @@ class _SearchBarState extends State<SearchBar> {
       builder: (context, transition) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Colors.white,
-            elevation: 4.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
-              }).toList(),
+          child: SingleChildScrollView(
+            child: Material(
+              color: Colors.white,
+              elevation: 4.0,
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: countrySuggestions.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(countrySuggestions[index]),
+                    onTap: () {
+                      widget.setValue(countrySuggestions[index], testMap[countrySuggestions[index]] ?? NO_LAT_LNG);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
+          )
         );
       },
     );

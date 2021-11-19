@@ -2,11 +2,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mappu/screens/explore/explore.dart';
+
+const DEFAULT_LAT_LNG = LatLng(46.2276, 2.2137);
 
 class MapView extends StatefulWidget {
-  final Function updateCountry, showToast;
+  final Function updateCountry, showToast, setFromSearchFalse;
+  final String location;
+  final LatLng latLng;
+  bool fromSearch;
 
-  const MapView({Key? key, required this.updateCountry, required this.showToast}) : super(key: key);
+  MapView({Key? key, required this.updateCountry, required this.showToast,
+    required this.location, required this.latLng, required this.fromSearch,
+    required this.setFromSearchFalse}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -18,13 +26,23 @@ class _MapViewState extends State<MapView> {
 
   String currCountry = "";
 
-  static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(46.2276, 2.2137),
-    zoom: 4,
-  );
-
   @override
   Widget build(BuildContext context) {
+
+    if (widget.fromSearch) {
+      searchBarAddMarker(widget.location, widget.latLng);
+      widget.fromSearch = false;
+    }
+
+    final targetLatLng = widget.latLng == NO_LAT_LNG ? DEFAULT_LAT_LNG : widget.latLng;
+
+    CameraPosition _initialPosition = CameraPosition(
+      target: targetLatLng,
+      zoom: 4,
+    );
+
+    print(widget.latLng);
+
     return GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: _initialPosition,
@@ -46,33 +64,30 @@ class _MapViewState extends State<MapView> {
               _marker.clear();
             }
 
-            _onAddMarkerButtonPressed(latlng);
+            onTapAddMarker(latlng);
           } catch (err) {
-            widget.showToast(Colors.redAccent, Icons.block, "Invalid Location");
+            widget.showToast(Colors.deepOrange, Icons.block, "Invalid Location");
           }
         }
     );
   }
 
-  void _onAddMarkerButtonPressed(LatLng latlng) async {
-
+  void onTapAddMarker(LatLng latlng) async {
     setState(() {
       _marker.add(Marker(
-        markerId: MarkerId("1"),
-        position: latlng,
-        infoWindow: InfoWindow(
-          title: currCountry,
-          snippet: "(Tap again to remove marker)"
-        ),
-        draggable: false,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        onTap: () {
-          setState(() {
+          markerId: MarkerId("1"),
+          position: latlng,
+          infoWindow: InfoWindow(
+              title: currCountry,
+              snippet: "(Tap again to remove marker)"
+          ),
+          draggable: false,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          onTap: () {
             _marker.clear();
             currCountry = "Unknown Country";
-            widget.updateCountry(currCountry);
-          });
-        }
+            widget.updateCountry(currCountry, latlng);
+          }
       ));
     });
 
@@ -84,6 +99,39 @@ class _MapViewState extends State<MapView> {
       value.showMarkerInfoWindow(MarkerId("1"));
     });
 
-    widget.updateCountry(currCountry);
+    widget.updateCountry(currCountry, latlng);
+  }
+
+  void searchBarAddMarker(String location, LatLng latLng) {
+    _marker.clear();
+    currCountry = location;
+    setState(() {
+      _marker.add(Marker(
+          markerId: MarkerId("1"),
+          position: latLng,
+          infoWindow: InfoWindow(
+              title: location,
+              snippet: "(Tap again to remove marker)"
+          ),
+          draggable: false,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          onTap: () {
+            _marker.clear();
+            currCountry = "Unknown Country";
+            widget.updateCountry(currCountry, latLng);
+          }
+      ));
+    });
+
+    _controller.future.then((value) async {
+      value.hideMarkerInfoWindow(MarkerId("1"));
+      value.animateCamera(
+          CameraUpdate.newLatLng(latLng)
+      );
+      await Future.delayed(Duration(seconds: 1));
+      value.showMarkerInfoWindow(MarkerId("1"));
+    });
+
+    widget.setFromSearchFalse();
   }
 }
