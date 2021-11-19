@@ -7,8 +7,10 @@ import '../data/country_to_continent.dart' as c_to_c;
 
 class SearchBar extends StatefulWidget {
   final void Function(String, LatLng) setValue;
+  final void Function(Color, IconData, String) showToast;
   final FloatingSearchBarController controller;
-  const SearchBar({Key? key, required this.setValue, required this.controller }) : super(key: key);
+  const SearchBar({Key? key, required this.setValue, required this.controller,
+    required this.showToast }) : super(key: key);
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -47,11 +49,13 @@ class _SearchBarState extends State<SearchBar> {
         });
       },
       onSubmitted: (String value) {
-        widget.setValue(value, NO_LAT_LNG);
-        // print(this);
-        // if (FloatingSearchBar.of(context)!.isOpen) {
-        //   FloatingSearchBar.of(context)!.close();
-        // }
+        final int numValues = countryList.where((country) =>
+            country == value).length;
+        if (numValues == 1) {
+          widget.setValue(value, testMap[value] ?? NO_LAT_LNG);
+        } else {
+          widget.showToast(Colors.deepOrange, Icons.block, "Invalid Location");
+        }
       },
       // Specify a custom transition to be used for
       // animating between opened and closed stated.

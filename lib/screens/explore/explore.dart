@@ -111,6 +111,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
         ),
         SearchBar(
           controller: searchBarController,
+          showToast: showToast,
           setValue: (String s, LatLng latlng) {
             // Update location and fetch articles
             location = s;

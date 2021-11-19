@@ -66,7 +66,7 @@ class _MapViewState extends State<MapView> {
 
             onTapAddMarker(latlng);
           } catch (err) {
-            widget.showToast(Colors.redAccent, Icons.block, "Invalid Location");
+            widget.showToast(Colors.deepOrange, Icons.block, "Invalid Location");
           }
         }
     );
