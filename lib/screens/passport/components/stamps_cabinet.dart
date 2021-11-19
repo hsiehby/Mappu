@@ -26,34 +26,30 @@ class _StampsCabinetState extends State<StampsCabinet> {
   }
   
   Widget buildStamp(int index) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            foregroundDecoration: _stamps[index].earned ? null
-                : const BoxDecoration(
-              color: Colors.grey,
-              backgroundBlendMode: BlendMode.saturation,
-            ),
-            child: Opacity(
-                opacity: _stamps[index].earned ? 1.0 : 0.25,
-                child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage(_stamps[index].iconPath)
-                )
-            ),
+    return InkWell(
+      onTap: () {
+          showDialog(context: context, builder: (context) {
+            return buildPostcardDetailsView(context, index);
+          });
+      },
+      child: Padding(
+        // padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
+        child: Container(
+          foregroundDecoration: _stamps[index].earned ? null
+              : const BoxDecoration(
+            color: Colors.grey,
+            backgroundBlendMode: BlendMode.saturation,
+          ),
+          child: Opacity(
+              opacity: _stamps[index].earned ? 1.0 : 0.30,
+              child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage(_stamps[index].iconPath)
+              )
           ),
         ),
-        Text(_stamps[index].name,
-          style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -71,7 +67,7 @@ class _StampsCabinetState extends State<StampsCabinet> {
         } else {
           return GridView.count(
             crossAxisCount: 3,
-            childAspectRatio: 0.85,
+            childAspectRatio: 0.9,
             children: List.generate(_stamps.length, (index) {
               String message = _stamps[index].earned ?
               _stamps[index].description +
@@ -95,14 +91,15 @@ class _StampsCabinetState extends State<StampsCabinet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Postcards"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0.0,
+      ),
+      body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-            child: Align(alignment: Alignment.center,
-                child: Text("Stamps Cabinet", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600),)),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -111,6 +108,64 @@ class _StampsCabinetState extends State<StampsCabinet> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildPostcardDetailsView(BuildContext context, int index) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      content: SizedBox(
+        width: 400.0,
+        height: 380.0,
+        child: Column(
+          children: [
+            Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  iconSize: 48.0,
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 200.0,
+                    foregroundDecoration: _stamps[index].earned ? null
+                        : const BoxDecoration(
+                      color: Colors.grey,
+                      backgroundBlendMode: BlendMode.saturation,
+                    ),
+                    child: Image.asset(_stamps[index].iconPath, fit: BoxFit.cover)
+                    // TODO: fix this
+                    // child: Opacity(
+                    //   opacity: _stamps[index].earned ? 1.0 : 0.30,
+                    //   child: Image.asset(_stamps[index].iconPath, fit: BoxFit.cover,)
+                    // ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    'A postcard from ${_stamps[index].earned ? _stamps[index].name : '???'}',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w600,
+                    )
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(_stamps[index].description),
+                ]
+              )
+            ),
+          ],
+        )
+      )
     );
   }
 }

@@ -1,7 +1,13 @@
 [
-  {"stampId":"test1","name":"Beginner","description":"Earn this stamp by reading your first article","iconPath":"assets/stamps/natural-brown.png","earned":true,"earnedAt":"2021-09-25T00:00:00.000Z"},
-  {"stampId":"test1","name":"Traveler","description":"Earn this stamp by exploring at least 3 countries","iconPath":"assets/stamps/mountain.png","earned":false,"earnedAt":null},
-  {"stampId":"test2","name":"Sailor","description":"Earn this stamp by exploring at least 10 countries","iconPath":"assets/stamps/natural.png","earned":false,"earnedAt":null},
-  {"stampId":"test3","name":"Adventurer","description":"Earn this stamp by exploring at least 30 countries","iconPath":"assets/stamps/forest.jpeg","earned":false,"earnedAt":null},
-  {"stampId":"test3","name":"Expeditioner","description":"Earn this stamp by exploring at least 100 countries","iconPath":"assets/stamps/city.png","earned":false,"earnedAt":null}
+  {"stampId":"c001","name":"Canada","description":"Earn this stamp by exploring your first country.","iconPath":"assets/stamps/natural-brown.png","earned":true,"earnedAt":"2021-09-25T00:00:00.000Z"},
+  {"stampId":"c005","name":"Vietnam","description":"Earn this stamp by exploring at least 5 countries.","iconPath":"assets/stamps/mountain.png","earned":true,"earnedAt":"2021-10-14T00:00:00.000Z"},
+  {"stampId":"c010","name":"Japan","description":"Earn this stamp by exploring at least 10 countries.","iconPath":"assets/stamps/natural.png","earned":true,"earnedAt":"2021-10-29T00:00:00.000Z"},
+  {"stampId":"c015","name":"Russia","description":"Earn this stamp by exploring at least 15 countries.","iconPath":"assets/stamps/forest.jpeg","earned":true,"earnedAt":"2021-11-03T00:00:00.000Z"},
+  {"stampId":"c020","name":"Thailand","description":"Earn this stamp by exploring at least 20 countries.","iconPath":"assets/stamps/city.png","earned":false,"earnedAt":null},
+  {"stampId":"c025","name":"Indonesia","description":"Earn this stamp by exploring at least 25 countries.","iconPath":"assets/stamps/city.png","earned":false,"earnedAt":null},
+  {"stampId":"a005","name":"Japan","description":"Earn this stamp by reading your first five articles.","iconPath":"assets/stamps/city.png","earned":true,"earnedAt":"2021-09-25T00:00:00.000Z"},
+  {"stampId":"a010","name":"Ukraine","description":"Earn this stamp by reading at least 10 articles.","iconPath":"assets/stamps/forest.jpeg","earned":true,"earnedAt":"2021-09-30T00:00:00.000Z"},
+  {"stampId":"a025","name":"America","description":"Earn this stamp by reading at least 25 articles.","iconPath":"assets/stamps/natural-brown.png","earned":true,"earnedAt":"2021-10-26T00:00:00.000Z"},
+  {"stampId":"a050","name":"South Africa","description":"Earn this stamp by reading at least 50 articles.","iconPath":"assets/stamps/mountain.png","earned":false,"earnedAt":null},
+  {"stampId":"a100","name":"Peru","description":"Earn this stamp by reading at least 100 articles.","iconPath":"assets/stamps/natural.png","earned":false,"earnedAt":null}
 ]
