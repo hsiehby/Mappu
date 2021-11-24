@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mappu/db/database_helper.dart';
+import 'package:mappu/models/explored_country.dart';
 import 'package:mappu/screens/explore/explore.dart';
 
 const DEFAULT_LAT_LNG = LatLng(46.2276, 2.2137);
@@ -12,9 +14,14 @@ class MapView extends StatefulWidget {
   final LatLng latLng;
   bool fromSearch;
 
-  MapView({Key? key, required this.updateCountry, required this.showToast,
-    required this.location, required this.latLng, required this.fromSearch,
-    required this.setFromSearchFalse}) : super(key: key);
+  MapView({Key? key,
+    required this.updateCountry,
+    required this.showToast,
+    required this.location,
+    required this.latLng,
+    required this.fromSearch,
+    required this.setFromSearchFalse})
+      : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -23,18 +30,19 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> _marker = {};
+  final dbHelper = DatabaseHelper.instance;
 
   String currCountry = "";
 
   @override
   Widget build(BuildContext context) {
-
     if (widget.fromSearch) {
       searchBarAddMarker(widget.location, widget.latLng);
       widget.fromSearch = false;
     }
 
-    final targetLatLng = widget.latLng == NO_LAT_LNG ? DEFAULT_LAT_LNG : widget.latLng;
+    final targetLatLng =
+    widget.latLng == NO_LAT_LNG ? DEFAULT_LAT_LNG : widget.latLng;
 
     CameraPosition _initialPosition = CameraPosition(
       target: targetLatLng,
@@ -65,11 +73,14 @@ class _MapViewState extends State<MapView> {
             }
 
             onTapAddMarker(latlng);
-          } catch (err) {
-            widget.showToast(Colors.deepOrange, Icons.block, "Invalid Location");
-          }
-        }
-    );
+            dbHelper.insertExploredCountry(ExploredCountry(
+                countryId: currCountry, exploredAt: DateTime.now()));
+            } catch (err)
+            {
+              widget.showToast(
+                  Colors.deepOrange, Icons.block, "Invalid Location");
+            }
+          });
   }
 
   void onTapAddMarker(LatLng latlng) async {
@@ -78,23 +89,18 @@ class _MapViewState extends State<MapView> {
           markerId: MarkerId("1"),
           position: latlng,
           infoWindow: InfoWindow(
-              title: currCountry,
-              snippet: "(Tap again to remove marker)"
-          ),
+              title: currCountry, snippet: "(Tap again to remove marker)"),
           draggable: false,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () {
             _marker.clear();
             currCountry = "Unknown Country";
             widget.updateCountry(currCountry, latlng);
-          }
-      ));
+          }));
     });
 
     _controller.future.then((value) async {
-      value.animateCamera(
-          CameraUpdate.newLatLng(latlng)
-      );
+      value.animateCamera(CameraUpdate.newLatLng(latlng));
       await Future.delayed(Duration(seconds: 1));
       value.showMarkerInfoWindow(MarkerId("1"));
     });
@@ -110,24 +116,21 @@ class _MapViewState extends State<MapView> {
           markerId: MarkerId("1"),
           position: latLng,
           infoWindow: InfoWindow(
-              title: location,
-              snippet: "(Tap again to remove marker)"
-          ),
+              title: location, snippet: "(Tap again to remove marker)"),
           draggable: false,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () {
             _marker.clear();
             currCountry = "Unknown Country";
             widget.updateCountry(currCountry, latLng);
-          }
-      ));
+          }));
     });
+    dbHelper.insertExploredCountry(ExploredCountry(
+        countryId: currCountry, exploredAt: DateTime.now()));
 
     _controller.future.then((value) async {
       value.hideMarkerInfoWindow(MarkerId("1"));
-      value.animateCamera(
-          CameraUpdate.newLatLng(latLng)
-      );
+      value.animateCamera(CameraUpdate.newLatLng(latLng));
       await Future.delayed(Duration(seconds: 1));
       value.showMarkerInfoWindow(MarkerId("1"));
     });
