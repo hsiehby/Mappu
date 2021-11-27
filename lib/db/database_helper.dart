@@ -36,17 +36,17 @@ class DatabaseHelper {
     );
 
     // TODO fix create table error
-    // await db.execute(
-    //   'CREATE TABLE readArticles('
-    //       'articleId TEXT PRIMARY KEY'
-    //       'readAt TEXT)',
-    // );
-    //
-    // await db.execute(
-    //   'CREATE TABLE exploredCountries('
-    //       'countryId TEXT PRIMARY KEY'
-    //       'exploredAt TEXT)',
-    // );
+    await db.execute(
+      'CREATE TABLE readArticles('
+          'articleId TEXT PRIMARY KEY,'
+          'readAt TEXT)',
+    );
+
+    await db.execute(
+      'CREATE TABLE exploredCountries('
+          'countryId TEXT PRIMARY KEY,'
+          'exploredAt TEXT)',
+    );
   }
 
   Future close() async {
@@ -112,7 +112,7 @@ class DatabaseHelper {
     await db.insert(
       'readArticles',
       readArticle.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
@@ -127,6 +127,14 @@ class DatabaseHelper {
         readAt: DateTime.parse(maps[i]['readAt']),
       );
     });
+  }
+
+  Future<int> getReadArticlesCount() async {
+    final db = await instance.database;
+
+    var count = Sqflite
+        .firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM readArticles'));
+    return count?? 0;
   }
 
   Future<void> updateReadArticle(ReadArticle readArticle) async {
@@ -157,7 +165,7 @@ class DatabaseHelper {
     await db.insert(
       'exploredCountries',
       exploredCountry.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
@@ -172,6 +180,14 @@ class DatabaseHelper {
         exploredAt: DateTime.parse(maps[i]['exploredAt']),
       );
     });
+  }
+
+  Future<int> getExploredCountriesCount() async {
+    final db = await instance.database;
+
+    var count = Sqflite
+        .firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM exploredCountries'));
+    return count?? 0;
   }
 
   Future<void> updateExploredCountry(ExploredCountry exploredCountry) async {
@@ -193,5 +209,15 @@ class DatabaseHelper {
       where: 'countryId = ?',
       whereArgs: [countryId],
     );
+  }
+
+  Future<void> resetProgress() async {
+    final db = await instance.database;
+
+    await db.delete('readArticles');
+    await db.delete('savedArticles');
+    await db.delete('exploredCountries');
+
+    print("done");
   }
 }
