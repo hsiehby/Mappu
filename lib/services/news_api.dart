@@ -1,4 +1,5 @@
 import 'package:http/http.dart';
+import 'package:mappu/data/country.dart';
 import 'package:xml/xml.dart';
 import 'package:mappu/models/news_article.dart';
 import 'dart:io';
@@ -35,6 +36,8 @@ class NewsAPI {
         // print(node.getElement('guid')!.text);
       }
 
+      print(location);
+
 
       return articles;
 
@@ -48,7 +51,7 @@ class NewsAPI {
     if (location == "Unknown Country") {
       return get(Uri.parse('https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en'));
     } else {
-      return get(Uri.parse('https://news.google.com/rss/headlines/section/geo/$location'));
+      return get(Uri.parse('https://news.google.com/rss/headlines/section/geo/${countryDetails[location]!.name}'));
     }
   }
 }

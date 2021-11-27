@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mappu/data/country.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/explored_country.dart';
 import 'package:mappu/screens/explore/explore.dart';
@@ -62,11 +63,11 @@ class _MapViewState extends State<MapView> {
           try {
             List<Placemark> newPlace = await placemarkFromCoordinates(
                 latlng.latitude, latlng.longitude);
-            if (newPlace[0].country == null || newPlace[0].country!.isEmpty) {
+            if (newPlace[0].isoCountryCode == null || newPlace[0].isoCountryCode!.isEmpty) {
               throw Exception();
             }
 
-            currCountry = newPlace[0].country ?? "Unknown Country";
+            currCountry = newPlace[0].isoCountryCode ?? "Unknown Country";
 
             if (_marker.isNotEmpty) {
               _marker.clear();
@@ -89,7 +90,9 @@ class _MapViewState extends State<MapView> {
           markerId: MarkerId("1"),
           position: latlng,
           infoWindow: InfoWindow(
-              title: currCountry, snippet: "(Tap again to remove marker)"),
+              title: countryDetails[currCountry]!.name,
+              snippet: "(Tap again to remove marker)"
+          ),
           draggable: false,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () {

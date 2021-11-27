@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:mappu/components/article_reader.dart';
+import 'package:mappu/data/country.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../../data/country_to_continent.dart' as c_to_c;
+import '../../data/country.dart';
 
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
-  static const List<String> continents = ['Asia','Europe','North America','Australia','Africa','Antarctica', 'South America'];
+  static const List<String> continents = [
+    'Europe',
+    'Asia',
+    'North America',
+    'Africa',
+    'Antarctica',
+    'South America',
+    'Oceania'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +25,30 @@ class SavedWidget extends StatelessWidget {
       length: continents.length,
       child: Scaffold(
         appBar: AppBar(
-          bottom: TabBar(
+            bottom: TabBar(
               tabs: List<Widget>.generate(continents.length, (int index) {
                 return Tab(text: continents[index]);
               }),
               isScrollable: true,
-          ),
-          title: const Text('Your Saved Articles'),
-        ),
+              indicatorColor: Colors.transparent,
+              unselectedLabelColor: Colors.grey,
+              indicator: const UnderlineTabIndicator(
+                borderSide: BorderSide(color: Colors.blue, width: 2.0),
+              ),
+              labelColor: Colors.blue,
+            ),
+            title: const Text('Your Saved Articles'),
+            backgroundColor: Colors.grey.shade50,
+            elevation: 1,
+            titleTextStyle: TextStyle(
+              color: Colors.grey.shade800,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w600,
+            )),
         body: TabBarView(
-          children: List<Widget>.generate(continents.length, (int index) {
-            return SavedList(continent: continents[index]);
-          })
-        ),
+            children: List<Widget>.generate(continents.length, (int index) {
+          return SavedList(continent: continents[index]);
+        })),
       ),
     );
   }
@@ -37,6 +57,7 @@ class SavedWidget extends StatelessWidget {
 class SavedList extends StatefulWidget {
   final String continent;
   final ChromeSafariBrowser browser = ArticleReader();
+
   SavedList({Key? key, required this.continent}) : super(key: key);
 
   @override
@@ -51,46 +72,58 @@ class _SavedListState extends State<SavedList> {
   void initState() {
     super.initState();
 
-    dbHelper.getSavedArticles()
-        .then((data) {
-          setState(() {
-            articles = data.where((i) => c_to_c.countryToContinent[i.countryId] == widget.continent).toList();
-          });
+    dbHelper.getSavedArticles().then((data) {
+      setState(() {
+        articles = data
+            .where((i) =>
+                countryDetails[i.countryId]!.continent == widget.continent)
+            .toList();
+      });
     });
   }
 
   ListTile _tile(SavedArticle article) {
     return ListTile(
-        title: Text(article.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
-            )),
-        subtitle: Text(timeago.format(article.pubDate),
-            style: TextStyle(
-              fontSize: 10.0,
-              color: Colors.grey[500],
-            )),
-        leading: const Icon(Icons.emoji_flags),
-        onTap: () async {
-          await widget.browser.open(
-              url: Uri.parse(article.link),
-              options: ChromeSafariBrowserClassOptions(
-                  android: AndroidChromeCustomTabsOptions(
-                      addDefaultShareMenuItem: false),
-                  ios: IOSSafariOptions(barCollapsingEnabled: true)));
-        },
+      title: Text(article.title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          )),
+      subtitle: Text(timeago.format(article.pubDate),
+          style: TextStyle(
+            fontSize: 10.0,
+            color: Colors.grey[500],
+          )),
+      leading: Image.asset(
+        'assets/flags/${article.countryId.toLowerCase()}.png',
+        width: 40,
+        height: 40,
+      ),
+      onTap: () async {
+        await widget.browser.open(
+            url: Uri.parse(article.link),
+            options: ChromeSafariBrowserClassOptions(
+                android: AndroidChromeCustomTabsOptions(
+                    addDefaultShareMenuItem: false),
+                ios: IOSSafariOptions(barCollapsingEnabled: true)));
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (articles.isEmpty) {
+      final String label = widget.continent;
+      return Center(
+          child: Text(
+        'Start saving articles in $label',
+        style: const TextStyle(fontSize: 18),
+      ));
+    }
 
     return ListView(
-      children: List<Widget>.generate(articles.length, (int index) {
-        return _tile(articles[index]);
-      })
-    );
+        children: List<Widget>.generate(articles.length, (int index) {
+      return _tile(articles[index]);
+    }));
   }
-
 }
