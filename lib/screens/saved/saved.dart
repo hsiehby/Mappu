@@ -10,19 +10,21 @@ import '../../data/country.dart';
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
   static const List<String> continents = [
+    'Unknown Country',
     'Europe',
     'Asia',
     'North America',
     'Africa',
     'Antarctica',
     'South America',
-    'Oceania'
+    'Oceania',
   ];
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: continents.length,
+      initialIndex: 1,
       child: Scaffold(
         appBar: AppBar(
             bottom: TabBar(
@@ -94,11 +96,14 @@ class _SavedListState extends State<SavedList> {
             fontSize: 10.0,
             color: Colors.grey[500],
           )),
-      leading: Image.asset(
-        'assets/flags/${article.countryId.toLowerCase()}.png',
-        width: 40,
-        height: 40,
-      ),
+      leading: widget.continent == "Unknown Country" ?
+        const Icon(Icons.emoji_flags, size: 40): Card(
+                child: Image.asset(
+                  'assets/flags/${article.countryId.toLowerCase()}.png',
+                  width: 40,
+                ),
+              elevation: 3.0
+            ),
       onTap: () async {
         await widget.browser.open(
             url: Uri.parse(article.link),
