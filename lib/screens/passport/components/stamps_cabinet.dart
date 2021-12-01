@@ -69,7 +69,7 @@ class _StampsCabinetState extends State<StampsCabinet> {
             children: List.generate(_postcards.length, (index) {
               String message = _postcards[index].earned ?
               _postcards[index].description +
-                  '\nEarned at: ${_postcards[index].earnedAt!.year}-'
+                  '\nEarned on: ${_postcards[index].earnedAt!.year}-'
                       '${_postcards[index].earnedAt!.month}-${_postcards[index].earnedAt!.day}'
                   : _postcards[index].description;
               return Tooltip(

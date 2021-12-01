@@ -5,6 +5,8 @@ class Postcard {
   late bool earned;
   late DateTime? earnedAt;
   late String iconPath;
+  late int minCountries;
+  late int minArticles;
 
   Postcard({
     required this.postcardId,
@@ -13,6 +15,8 @@ class Postcard {
     required this.earned,
     required this.earnedAt,
     required this.iconPath,
+    required this.minCountries,
+    required this.minArticles,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +27,8 @@ class Postcard {
       'iconPath': iconPath,
       'earned': earned ? 1 : 0,
       'earnedAt': earnedAt?.toIso8601String(),
+      'minCountries': minCountries,
+      'minArticles': minArticles,
     };
   }
 
@@ -32,10 +38,12 @@ class Postcard {
       description = json['description'],
       iconPath = json['iconPath'],
       earned = json['earned'],
-      earnedAt = json['earned'] ? DateTime.parse(json['earnedAt']) : null;
+      earnedAt = json['earned'] ? DateTime.parse(json['earnedAt']) : null,
+      minCountries = json['minCountries'],
+      minArticles = json['minArticles'];
 
   @override
   String toString() {
-    return 'Postcard{postcardId: $postcardId, name: $name, description: $description, iconPath: $iconPath, earned: $earned, earnedAt: ${earnedAt?.toIso8601String()}}';
+    return 'Postcard{postcardId: $postcardId, name: $name, description: $description, iconPath: $iconPath, earned: $earned, earnedAt: ${earnedAt?.toIso8601String()}, minCountries: $minCountries, minArticles: $minArticles}';
   }
 }

@@ -35,8 +35,8 @@ class _StatsViewState extends State<StatsView> {
 
         if (snapshot.hasData) {
           Stats stats = snapshot.data as Stats;
-          numArticlesReadMsg = stats.numArticlesRead.toString();
-          numCountriesExploredMsg = stats.numCountriesExplored.toString();
+          numArticlesReadMsg = stats.numArticlesRead.toString() + ' articles';
+          numCountriesExploredMsg = stats.numCountriesExplored.toString() + ' countries';
         } else {
           numArticlesReadMsg = snapshot.error.toString();
           numCountriesExploredMsg = snapshot.error.toString();

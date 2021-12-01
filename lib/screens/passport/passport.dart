@@ -16,7 +16,7 @@ class PassportWidget extends StatelessWidget {
             Profile(),
             SizedBox(height: 12.0),
             StatsView(),
-            StampsPreview(),
+            PostcardsPreview(),
           ],
         ),
       )

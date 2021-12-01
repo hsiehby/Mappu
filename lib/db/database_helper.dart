@@ -24,7 +24,7 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 3, onCreate: _createDB);
+    return await openDatabase(path, version: 5, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -49,7 +49,9 @@ class DatabaseHelper {
           'description TEXT,'
           'iconPath TEXT,'
           'earned INTEGER,'
-          'earnedAt TEXT)',
+          'earnedAt TEXT,'
+          'minCountries INTEGER,'
+          'minArticles INTEGER)',
     );
 
     await db.execute(
@@ -90,7 +92,7 @@ class DatabaseHelper {
   Future<void> initializePostcards(Database db) async {
     List<Postcard> _postcards = [];
 
-    final String response = await rootBundle.loadString('assets/stamps/stamps.json');
+    final String response = await rootBundle.loadString('assets/postcards/postcards.json');
     final data = await jsonDecode(response);
     _postcards = data.map<Postcard>((item) => (Postcard.fromJson(item))).toList();
 
@@ -133,6 +135,8 @@ class DatabaseHelper {
         iconPath: maps[i]['iconPath'],
         earned: maps[i]['earned'] == 0 ? false : true,
         earnedAt: maps[i]['earnedAt'] != null ? DateTime.parse(maps[i]['earnedAt']) : null,
+        minCountries: maps[i]['minCountries'],
+        minArticles: maps[i]['minArticles'],
       );
     });
   }
@@ -156,6 +160,24 @@ class DatabaseHelper {
       where: 'postcardId = ?',
       whereArgs: [postcardId],
     );
+  }
+
+  // Method for unlocking postcards
+  Future<void> checkPostcardStatus() async {
+    int numArticlesRead = await getReadArticlesCount();
+    int numCountriesExplored = await getExploredCountriesCount();
+
+    List<Postcard> postcards = await getPostcards();
+    for (Postcard postcard in postcards) {
+      if (!postcard.earned
+          && numArticlesRead >= postcard.minArticles
+          && numCountriesExplored >= postcard.minCountries) {
+        print('Unlocked postcard id: ${postcard.postcardId}');
+        postcard.earned = true;
+        postcard.earnedAt = DateTime.now();
+        updatePostcard(postcard);
+      }
+    }
   }
 
   // Methods for SavedArticle
@@ -218,6 +240,8 @@ class DatabaseHelper {
       readArticle.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+
+    checkPostcardStatus();
   }
 
   Future<List<ReadArticle>> getReadArticles() async {
@@ -271,6 +295,8 @@ class DatabaseHelper {
       exploredCountry.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+
+    checkPostcardStatus();
   }
 
   Future<List<ExploredCountry>> getExploredCountries() async {
