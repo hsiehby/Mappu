@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mappu/data/country.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/read_article.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:mappu/models/news_article.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:mappu/services/string_casing_extension.dart';
 
 class ArticlesSheet extends StatelessWidget {
   ArticlesSheet({Key? key,
@@ -126,7 +126,7 @@ class ArticlesSheet extends StatelessWidget {
               )
                   : Flexible(
                   child: Text(
-                    "Trending in ${location.toTitleCase()}",
+                    "Trending in ${countryDetails[location]!.name}",
                     textAlign: TextAlign.start,
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
