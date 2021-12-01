@@ -66,7 +66,6 @@ class DatabaseHelper {
           'savedAt TEXT)',
     );
 
-    // TODO fix create table error
     await db.execute(
       'CREATE TABLE readArticles('
           'articleId TEXT PRIMARY KEY,'
