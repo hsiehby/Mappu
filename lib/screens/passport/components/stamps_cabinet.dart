@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mappu/models/postcard.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mappu/db/database_helper.dart';
 
