@@ -172,6 +172,7 @@ const countryToContinent = {
   'Sweden': 'Europe',
   'Switzerland': 'Europe',
   'Syria': 'Asia',
+  'Taiwan': 'Asia',
   'Tajikistan': 'Asia',
   'Tanzania': 'Africa',
   'Thailand': 'Asia',

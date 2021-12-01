@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mappu/models/stamp.dart';
+import 'package:mappu/models/postcard.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -13,13 +13,13 @@ class StampsPreview extends StatefulWidget {
 }
 
 class _StampsPreviewState extends State<StampsPreview> {
-  List<Stamp> _stamps = [];
+  List<Postcard> _stamps = [];
 
   Future<void> loadStamps() async {
     if (_stamps.isEmpty) {
       final String response = await rootBundle.loadString('assets/stamps/stamps.json');
       final data = await jsonDecode(response);
-      final List<Stamp> stamps = data.map<Stamp>((item) => (Stamp.fromJson(item))).toList();
+      final List<Postcard> stamps = data.map<Postcard>((item) => (Postcard.fromJson(item))).toList();
       setState(() {
         _stamps = stamps;
       });

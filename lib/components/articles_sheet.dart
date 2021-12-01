@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:mappu/db/database_helper.dart';
+import 'package:mappu/models/explored_country.dart';
 import 'package:mappu/models/read_article.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:mappu/models/news_article.dart';
@@ -54,6 +55,9 @@ class ArticlesSheet extends StatelessWidget {
               await dbHelper.insertReadArticle(ReadArticle(
                   articleId: articles[index].articleId,
                   readAt: DateTime.now()));
+              await dbHelper.insertExploredCountry(ExploredCountry(
+                  countryId: location,
+                  exploredAt: DateTime.now()));
             },
             child: Container(
               decoration: const BoxDecoration(

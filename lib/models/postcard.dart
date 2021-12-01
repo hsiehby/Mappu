@@ -1,13 +1,13 @@
-class Stamp {
-  late String stampId;
+class Postcard {
+  late String postcardId;
   late String name;
   late String description;
   late bool earned;
   late DateTime? earnedAt;
   late String iconPath;
 
-  Stamp({
-    required this.stampId,
+  Postcard({
+    required this.postcardId,
     required this.name,
     required this.description,
     required this.earned,
@@ -17,17 +17,17 @@ class Stamp {
 
   Map<String, dynamic> toMap() {
     return {
-      'stampId': stampId,
+      'postcardId': postcardId,
       'name': name,
       'description': description,
       'iconPath': iconPath,
-      'earned': earned,
+      'earned': earned ? 1 : 0,
       'earnedAt': earnedAt?.toIso8601String(),
     };
   }
 
-  Stamp.fromJson(Map<String, dynamic> json)
-    : stampId = json['stampId'],
+  Postcard.fromJson(Map<String, dynamic> json)
+    : postcardId = json['postcardId'],
       name = json['name'],
       description = json['description'],
       iconPath = json['iconPath'],
@@ -36,6 +36,6 @@ class Stamp {
 
   @override
   String toString() {
-    return 'Stamp{stampId: $stampId, name: $name, description: $description, iconPath: $iconPath, earned: $earned, earnedAt: ${earnedAt?.toIso8601String()}}';
+    return 'Postcard{postcardId: $postcardId, name: $name, description: $description, iconPath: $iconPath, earned: $earned, earnedAt: ${earnedAt?.toIso8601String()}}';
   }
 }

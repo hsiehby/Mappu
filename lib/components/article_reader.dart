@@ -1,6 +1,8 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class ArticleReader extends ChromeSafariBrowser {
+  final DateTime openedAt = DateTime.now();
+
   @override
   void onOpened() {
     // print("ChromeSafari browser opened");

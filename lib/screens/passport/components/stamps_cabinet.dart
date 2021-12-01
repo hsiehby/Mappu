@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mappu/models/stamp.dart';
+import 'package:mappu/models/postcard.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:mappu/db/database_helper.dart';
 
 class StampsCabinet extends StatefulWidget {
   const StampsCabinet({Key? key}) : super(key: key);
@@ -12,15 +13,14 @@ class StampsCabinet extends StatefulWidget {
 }
 
 class _StampsCabinetState extends State<StampsCabinet> {
-  List<Stamp> _stamps = [];
+  List<Postcard> _postcards = [];
 
-  Future<void> loadStamps() async {
-    if (_stamps.isEmpty) {
-      final String response = await rootBundle.loadString('assets/stamps/stamps.json');
-      final data = await jsonDecode(response);
-      final List<Stamp> stamps = data.map<Stamp>((item) => (Stamp.fromJson(item))).toList();
+  Future<void> loadPostcards() async {
+    final dbHelper = DatabaseHelper.instance;
+    if (_postcards.isEmpty) {
+      final List<Postcard> postcards = await dbHelper.getPostcards();
       setState(() {
-        _stamps = stamps;
+        _postcards = postcards;
       });
     }
   }
@@ -36,16 +36,16 @@ class _StampsCabinetState extends State<StampsCabinet> {
         // padding: const EdgeInsets.all(0.0),
         padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
         child: Container(
-          foregroundDecoration: _stamps[index].earned ? null
+          foregroundDecoration: _postcards[index].earned ? null
               : const BoxDecoration(
             color: Colors.grey,
             backgroundBlendMode: BlendMode.saturation,
           ),
           child: Opacity(
-              opacity: _stamps[index].earned ? 1.0 : 0.30,
+              opacity: _postcards[index].earned ? 1.0 : 0.30,
               child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage(_stamps[index].iconPath)
+                  backgroundImage: AssetImage(_postcards[index].iconPath)
               )
           ),
         ),
@@ -55,7 +55,7 @@ class _StampsCabinetState extends State<StampsCabinet> {
 
   Widget buildStampsGrid() {
     return FutureBuilder(
-      future: loadStamps(),
+      future: loadPostcards(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SpinKitWanderingCubes(
@@ -68,12 +68,12 @@ class _StampsCabinetState extends State<StampsCabinet> {
           return GridView.count(
             crossAxisCount: 3,
             childAspectRatio: 0.9,
-            children: List.generate(_stamps.length, (index) {
-              String message = _stamps[index].earned ?
-              _stamps[index].description +
-                  '\nEarned at: ${_stamps[index].earnedAt!.year}-'
-                      '${_stamps[index].earnedAt!.month}-${_stamps[index].earnedAt!.day}'
-                  : _stamps[index].description;
+            children: List.generate(_postcards.length, (index) {
+              String message = _postcards[index].earned ?
+              _postcards[index].description +
+                  '\nEarned at: ${_postcards[index].earnedAt!.year}-'
+                      '${_postcards[index].earnedAt!.month}-${_postcards[index].earnedAt!.day}'
+                  : _postcards[index].description;
               return Tooltip(
                 decoration: BoxDecoration(
                   color: Colors.green.withOpacity(0.9),
@@ -113,7 +113,7 @@ class _StampsCabinetState extends State<StampsCabinet> {
 
   Widget buildPostcardDetailsView(BuildContext context, int index) {
     return AlertDialog(
-      contentPadding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+      contentPadding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       content: SizedBox(
         width: 400.0,
@@ -138,12 +138,12 @@ class _StampsCabinetState extends State<StampsCabinet> {
                   Container(
                     width: double.infinity,
                     height: 200.0,
-                    foregroundDecoration: _stamps[index].earned ? null
+                    foregroundDecoration: _postcards[index].earned ? null
                         : const BoxDecoration(
                       color: Colors.grey,
                       backgroundBlendMode: BlendMode.saturation,
                     ),
-                    child: Image.asset(_stamps[index].iconPath, fit: BoxFit.cover)
+                    child: Image.asset(_postcards[index].iconPath, fit: BoxFit.cover)
                     // TODO: fix this
                     // child: Opacity(
                     //   opacity: _stamps[index].earned ? 1.0 : 0.30,
@@ -152,14 +152,14 @@ class _StampsCabinetState extends State<StampsCabinet> {
                   ),
                   const SizedBox(height: 20.0),
                   Text(
-                    'A postcard from ${_stamps[index].earned ? _stamps[index].name : '???'}',
+                    'A postcard from ${_postcards[index].earned ? _postcards[index].name : '???'}',
                     style: const TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w600,
                     )
                   ),
                   const SizedBox(height: 10.0),
-                  Text(_stamps[index].description),
+                  Text(_postcards[index].description),
                 ]
               )
             ),
