@@ -39,15 +39,21 @@ class _HomeState extends State<Home> {
         currentIndex: _currentIndex,
         items: [
           BottomNavigationBarItem(
-            icon: _currentIndex == 0 ? const Icon(Icons.location_pin) : const Icon(Icons.location_on_outlined),
+            icon: _currentIndex == 0 ?
+              const Icon(IconData(0xe4c9, fontFamily: 'MaterialIcons')) :
+              const Icon(IconData(0xf2ac, fontFamily: 'MaterialIcons')),
             label: "Explore",
           ),
           BottomNavigationBarItem(
-            icon: _currentIndex == 1 ? const Icon(Icons.bookmark) : const Icon(Icons.bookmark_border),
+            icon: _currentIndex == 1 ?
+              const Icon(IconData(0xe0f1, fontFamily: 'MaterialIcons')) :
+              const Icon(IconData(0xeee2, fontFamily: 'MaterialIcons')),
             label: "Saved",
           ),
           BottomNavigationBarItem(
-            icon: _currentIndex == 2 ? const Icon(Icons.star) : const Icon(Icons.star_border),
+            icon: _currentIndex == 2 ?
+            const Icon(IconData(0xe06d, fontFamily: 'MaterialIcons')) :
+            const Icon(IconData(0xee5e, fontFamily: 'MaterialIcons')),
             label: "Passport",
           ),
         ],
