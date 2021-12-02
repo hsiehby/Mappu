@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mappu/components/article_reader.dart';
 import 'package:mappu/data/country.dart';
 import 'package:mappu/db/database_helper.dart';
@@ -10,7 +11,7 @@ import '../../data/country.dart';
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
   static const List<String> continents = [
-    'Unknown Country',
+    'Explore Page',
     'Europe',
     'Asia',
     'North America',
@@ -35,17 +36,20 @@ class SavedWidget extends StatelessWidget {
               indicatorColor: Colors.transparent,
               unselectedLabelColor: Colors.grey,
               indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                borderSide: BorderSide(color: Color(0xffff8f51), width: 2.0),
               ),
-              labelColor: Colors.blue,
+              labelColor: Color(0xffff8f51),
             ),
-            title: const Text('Your Saved Articles'),
+            title: Text(
+              'Your Saved Articles',
+              style: GoogleFonts.notoSans(),
+            ),
             backgroundColor: Colors.grey.shade50,
             elevation: 1,
             titleTextStyle: TextStyle(
               color: Colors.grey.shade800,
               fontSize: 20.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w800,
             )),
         body: TabBarView(
             children: List<Widget>.generate(continents.length, (int index) {
@@ -88,15 +92,16 @@ class _SavedListState extends State<SavedList> {
     return ListTile(
       title: Text(article.title,
           style: const TextStyle(
+            fontSize: 18.0,
             fontWeight: FontWeight.w500,
-            fontSize: 20,
+            letterSpacing: -0.5,
           )),
       subtitle: Text(timeago.format(article.pubDate),
           style: TextStyle(
             fontSize: 10.0,
             color: Colors.grey[500],
           )),
-      leading: widget.continent == "Unknown Country" ?
+      leading: widget.continent == "Explore Page" ?
         const Icon(Icons.emoji_flags, size: 40): Card(
                 child: Image.asset(
                   'assets/flags/${article.countryId.toLowerCase()}.png',

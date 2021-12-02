@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'screens/explore/explore.dart';
 import 'screens/saved/saved.dart';
@@ -11,7 +12,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables(); // Load .env which includes API keys
 
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+      theme: ThemeData(
+        textTheme: GoogleFonts.notoSansTextTheme()
+      ),
       home: Home()
   ));
 }
@@ -38,19 +42,33 @@ class _HomeState extends State<Home> {
           builder: Builder(builder: (context) => _children[_currentIndex],)
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xffededed),
+        selectedItemColor: Color(0xffff8f51),
         onTap: onTabTapped,
         currentIndex: _currentIndex,
+        unselectedLabelStyle: GoogleFonts.notoSans(
+          fontWeight: FontWeight.w700,
+        ),
+        selectedLabelStyle: GoogleFonts.notoSans(
+          fontWeight: FontWeight.w800,
+        ),
         items: [
           BottomNavigationBarItem(
-            icon: _currentIndex == 0 ? const Icon(Icons.location_pin) : const Icon(Icons.location_on_outlined),
+            icon: _currentIndex == 0 ?
+              const Icon(IconData(0xe4c9, fontFamily: 'MaterialIcons')) :
+              const Icon(IconData(0xf2ac, fontFamily: 'MaterialIcons')),
             label: "Explore",
           ),
           BottomNavigationBarItem(
-            icon: _currentIndex == 1 ? const Icon(Icons.bookmark) : const Icon(Icons.bookmark_border),
+            icon: _currentIndex == 1 ?
+              const Icon(IconData(0xe0f1, fontFamily: 'MaterialIcons')) :
+              const Icon(IconData(0xeee2, fontFamily: 'MaterialIcons')),
             label: "Saved",
           ),
           BottomNavigationBarItem(
-            icon: _currentIndex == 2 ? const Icon(Icons.star) : const Icon(Icons.star_border),
+            icon: _currentIndex == 2 ?
+            const Icon(IconData(0xe06d, fontFamily: 'MaterialIcons')) :
+            const Icon(IconData(0xee5e, fontFamily: 'MaterialIcons')),
             label: "Passport",
           ),
         ],

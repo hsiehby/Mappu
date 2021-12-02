@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mappu/models/postcard.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mappu/screens/passport/components/stamps_cabinet.dart';
@@ -70,20 +71,29 @@ class _PostcardsPreviewState extends State<PostcardsPreview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
       child: Container(
         decoration: BoxDecoration(
+          color: Color(0xffededed),
           border: Border.all(color: Colors.grey.shade300, width: 1.5),
           borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 13,
+              offset: Offset(3, 3), // changes position of shadow
+            ),
+          ],
         ),
         child: Column(
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 20.0),
               //Changed the top side padding to orient on passport page for now
               //Need to change literal ints to variables based on size of device if we care about it looking good on any phone
               child: Align(alignment: Alignment.centerLeft,
-                  child: Text("Postcards collected", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal),)),
+                  child: Text("Postcards", style: GoogleFonts.notoSans(fontSize: 26.0, fontWeight: FontWeight.w800),)),
             ),
             // Badge icons
             SizedBox(
@@ -105,7 +115,21 @@ class _PostcardsPreviewState extends State<PostcardsPreview> {
                       MaterialPageRoute(builder: (context) => StampsCabinet()),
                     );
                   },
-                  child: const Text('View All'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('View All',
+                        style: GoogleFonts.notoSans(
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                        ),),
+                      Icon(
+                          Icons.chevron_right,
+                        color: Colors.orange,
+                      )
+                    ],
+                  )
                 ),
               ),
             ),
