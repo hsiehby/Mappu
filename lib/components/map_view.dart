@@ -94,7 +94,7 @@ class _MapViewState extends State<MapView> {
               snippet: "(Tap again to remove marker)"
           ),
           draggable: false,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           onTap: () {
             _marker.clear();
             currCountry = "Unknown Country";
@@ -124,7 +124,7 @@ class _MapViewState extends State<MapView> {
           infoWindow: InfoWindow(
               title: location.length == 2 ? countryDetails[location]!.name : location, snippet: "(Tap again to remove marker)"),
           draggable: false,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           onTap: () {
             _marker.clear();
             currCountry = "Unknown Country";
