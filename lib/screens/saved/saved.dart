@@ -92,8 +92,9 @@ class _SavedListState extends State<SavedList> {
     return ListTile(
       title: Text(article.title,
           style: const TextStyle(
+            fontSize: 18.0,
             fontWeight: FontWeight.w500,
-            fontSize: 20,
+            letterSpacing: -0.5,
           )),
       subtitle: Text(timeago.format(article.pubDate),
           style: TextStyle(

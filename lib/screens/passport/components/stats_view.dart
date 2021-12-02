@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mappu/db/database_helper.dart';
 import 'package:mappu/models/stats.dart';
 
@@ -48,8 +49,17 @@ class _StatsViewState extends State<StatsView> {
             padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Container(
               decoration: BoxDecoration(
+                color: Color(0xffededed),
                 border: Border.all(color: Colors.grey.shade300, width: 1.5),
                 borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 13,
+                    offset: Offset(3, 3), // changes position of shadow
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +80,8 @@ class _StatsViewState extends State<StatsView> {
                         Text(
                           numArticlesReadMsg,
                           style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 32.0,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 26.0,
                             height: 1.4,
                           ),
                         ),
@@ -87,8 +97,8 @@ class _StatsViewState extends State<StatsView> {
                         Text(
                           numCountriesExploredMsg,
                           style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 32.0,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 26.0,
                             height: 1.4,
                           ),
                         ),
