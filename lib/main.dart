@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/explore/explore.dart';
 import 'screens/saved/saved.dart';
 import 'screens/passport/passport.dart';
@@ -10,7 +11,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables(); // Load .env which includes API keys
 
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+      theme: ThemeData(
+        textTheme: GoogleFonts.notoSansTextTheme()
+      ),
       home: Home()
   ));
 }
