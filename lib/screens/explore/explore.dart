@@ -10,10 +10,13 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:mappu/components/map_view.dart';
 import 'package:mappu/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 const NO_LAT_LNG = LatLng(90, 91);
 
 class ExploreWidget extends StatefulWidget {
+  static const prefIsFirstLaunch = "PREFERENCES_IS_FIRST_LAUNCH_STRING";
   const ExploreWidget({Key? key}) : super(key: key);
 
   @override
@@ -21,6 +24,8 @@ class ExploreWidget extends StatefulWidget {
 }
 
 class _ExploreWidgetState extends State<ExploreWidget> {
+  GlobalKey _one = GlobalKey();
+
   final ChromeSafariBrowser browser = ArticleReader();
   final FloatingSearchBarController searchBarController = FloatingSearchBarController();
 
@@ -45,6 +50,25 @@ class _ExploreWidgetState extends State<ExploreWidget> {
 
     fToast = FToast();
     fToast.init(globalKey.currentState!.context);
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _isFirstLaunch().then((result) {
+        if (result) {
+          ShowCaseWidget.of(context)!.startShowCase([_one]);
+        }
+      });
+    });
+  }
+
+  Future<bool> _isFirstLaunch() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    bool isFirstLaunch = sharedPreferences.getBool(ExploreWidget.prefIsFirstLaunch) ?? true;
+
+    if(isFirstLaunch) {
+      sharedPreferences.setBool(ExploreWidget.prefIsFirstLaunch, false);
+    }
+
+    return isFirstLaunch;
   }
 
   updateLocation(String country, LatLng newLatLng) {
@@ -107,7 +131,9 @@ class _ExploreWidgetState extends State<ExploreWidget> {
             child: ArticlesSheet(browser: browser,
               articles: articles,
               location: location,
-              showToast: showToast,)
+              showToast: showToast,
+              articleKey: _one,
+            )
         ),
         SearchBar(
           controller: searchBarController,

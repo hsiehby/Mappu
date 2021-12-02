@@ -7,6 +7,7 @@ import 'package:mappu/models/read_article.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:mappu/models/news_article.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ArticlesSheet extends StatelessWidget {
@@ -14,12 +15,14 @@ class ArticlesSheet extends StatelessWidget {
     required this.browser,
     required this.articles,
     required this.location,
-    required this.showToast}) : super(key: key);
+    required this.showToast,
+    required this.articleKey,}) : super(key: key);
 
   final ChromeSafariBrowser browser;
   final List<NewsArticle> articles;
   final String location;
   final Function showToast;
+  final GlobalKey articleKey;
   final dbHelper = DatabaseHelper.instance;
 
   _saveArticle(NewsArticle article, String location) {
@@ -30,7 +33,7 @@ class ArticlesSheet extends StatelessWidget {
     showToast(Colors.grey, Icons.bookmark_border, "Saved");
   }
 
-  Widget articleItemBuilder(context, index) {
+  Widget buildItem(index) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(0, 4.0, 4.0, 4.0),
         child: Slidable(
@@ -64,45 +67,53 @@ class ArticlesSheet extends StatelessWidget {
                 color: Colors.white,
               ),
               child:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        articles[index].source,
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w500,
-                        )
-                    ),
-                    const SizedBox(height: 3.0),
-                    Text(
-                        articles[index].title,
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.5,
-                        )
-                    ),
-                    const SizedBox(height: 24.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                            timeago.format(articles[index].pubDate),
-                            style: TextStyle(
-                              fontSize: 10.0,
-                              color: Colors.grey[500],
-                            )
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      articles[index].source,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w500,
+                      )
+                  ),
+                  const SizedBox(height: 3.0),
+                  Text(
+                      articles[index].title,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.5,
+                      )
+                  ),
+                  const SizedBox(height: 24.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                          timeago.format(articles[index].pubDate),
+                          style: TextStyle(
+                            fontSize: 10.0,
+                            color: Colors.grey[500],
+                          )
+                      ),
+                    ],
+                  )
+                ],
+              ),
           ),
-        ),
+        )
       )
     );
+  }
+
+  Widget articleItemBuilder(context, index) {
+    return index == 0 ? Showcase(
+        key: articleKey,
+        child: buildItem(index),
+        description: 'Save article by sliding left and tapping on save icon') :
+      buildItem(index);
   }
 
   Widget buildHeaderForList() {
