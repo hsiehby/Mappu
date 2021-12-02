@@ -113,14 +113,16 @@ class _MapViewState extends State<MapView> {
 
   void searchBarAddMarker(String location, LatLng latLng) {
     _marker.clear();
-    location = countryDetails[location]!.name;
+    if (location.length != 2) {
+      location = countryToCode[location]!;
+    }
     currCountry = location;
     setState(() {
       _marker.add(Marker(
           markerId: MarkerId("1"),
           position: latLng,
           infoWindow: InfoWindow(
-              title: location, snippet: "(Tap again to remove marker)"),
+              title: location.length == 2 ? countryDetails[location]!.name : location, snippet: "(Tap again to remove marker)"),
           draggable: false,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           onTap: () {
