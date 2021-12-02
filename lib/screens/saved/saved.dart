@@ -10,7 +10,7 @@ import '../../data/country.dart';
 class SavedWidget extends StatelessWidget {
   const SavedWidget({Key? key}) : super(key: key);
   static const List<String> continents = [
-    'Unknown Country',
+    'Explore Page',
     'Europe',
     'Asia',
     'North America',
@@ -96,7 +96,7 @@ class _SavedListState extends State<SavedList> {
             fontSize: 10.0,
             color: Colors.grey[500],
           )),
-      leading: widget.continent == "Unknown Country" ?
+      leading: widget.continent == "Explore Page" ?
         const Icon(Icons.emoji_flags, size: 40): Card(
                 child: Image.asset(
                   'assets/flags/${article.countryId.toLowerCase()}.png',

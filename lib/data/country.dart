@@ -544,7 +544,7 @@ var countryDetails = {
   "ZM": Country(name: "Zambia", latlng: LatLng(-15, 30), continent: "Africa"),
   "ZW": Country(name: "Zimbabwe", latlng: LatLng(-20, 30), continent: "Africa"),
   "AF": Country(name: "Afghanistan", latlng: LatLng(33, 65), continent: "Asia"),
-  "Unknown Country": Country(name: "Unknown Country", latlng: LatLng(0,0), continent: "Unknown Country")
+  "Unknown Country": Country(name: "Unknown Country", latlng: LatLng(0,0), continent: "Explore Page")
 };
 
 var countryToCode = {
