@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mappu/data/levels.dart';
 import 'package:mappu/db/database_helper.dart';
 
@@ -45,20 +46,30 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Text(name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500)),
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                            "${snapshot.data!.title}",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 38.0,
+                              fontWeight: FontWeight.bold,
+                              // height: 2.0,
+                            )),
+                      ),
                       Text(
-                          "Level ${snapshot.data!.level} ${snapshot.data!.title}",
+                          "Level ${snapshot.data!.level} • ${snapshot.data!.points} points",
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w300,
-                            height: 2.0,
+                            color: Colors.orange,
                           )),
                       Text(
-                          "${snapshot.data!.points} points • ${snapshot.data!.levelMax - snapshot.data!.points} points until next level",
+                          "${snapshot.data!.levelMax - snapshot.data!.points} points until next level",
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w300,
                             color: Colors.grey.shade600,
-                            height: 1.2,
+                            // height: 1.2,
                           )
                       )
                     ]

@@ -14,7 +14,7 @@ class PassportWidget extends StatelessWidget {
           children: const [
             SizedBox(height: 36.0),
             Profile(),
-            SizedBox(height: 12.0),
+            SizedBox(height: 9.0),
             StatsView(),
             PostcardsPreview(),
           ],

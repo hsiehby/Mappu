@@ -71,7 +71,7 @@ class _PostcardsPreviewState extends State<PostcardsPreview> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
       child: Container(
         decoration: BoxDecoration(
           color: Color(0xffededed),
