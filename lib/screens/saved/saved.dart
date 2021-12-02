@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mappu/components/article_reader.dart';
 import 'package:mappu/data/country.dart';
 import 'package:mappu/db/database_helper.dart';
@@ -33,17 +34,20 @@ class SavedWidget extends StatelessWidget {
               }),
               isScrollable: true,
               indicatorColor: Colors.transparent,
-              unselectedLabelColor: Colors.grey,
+              unselectedLabelColor: Colors.white,
               indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                borderSide: BorderSide(color: Colors.brown, width: 2.0),
               ),
-              labelColor: Colors.blue,
+              labelColor: Colors.brown,
             ),
-            title: const Text('Your Saved Articles'),
-            backgroundColor: Colors.grey.shade50,
+            title: Text(
+              'Your Saved Articles',
+              style: GoogleFonts.notoSans(),
+            ),
+            backgroundColor: Colors.orange,
             elevation: 1,
-            titleTextStyle: TextStyle(
-              color: Colors.grey.shade800,
+            titleTextStyle: const TextStyle(
+              color: Colors.brown,
               fontSize: 20.0,
               fontWeight: FontWeight.w600,
             )),
