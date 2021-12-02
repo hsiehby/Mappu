@@ -113,6 +113,7 @@ class _MapViewState extends State<MapView> {
 
   void searchBarAddMarker(String location, LatLng latLng) {
     _marker.clear();
+    location = countryDetails[location]!.name;
     currCountry = location;
     setState(() {
       _marker.add(Marker(
