@@ -42,7 +42,7 @@ class _SearchBarState extends State<SearchBar> {
         setState(() {
           if (query.trim() != '') {
             countrySuggestions = countryList.where((country) =>
-                country.toLowerCase().startsWith(query.trim().toLowerCase())).toList();
+                country.toLowerCase().contains(query.trim().toLowerCase())).toList();
           } else {
             countrySuggestions = countryList;
           }
