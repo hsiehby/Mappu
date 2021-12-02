@@ -1,8 +1,12 @@
+import 'package:http/http.dart';
+import 'package:mappu/models/postcard.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:mappu/models/saved_article.dart';
 import 'package:mappu/models/read_article.dart';
 import 'package:mappu/models/explored_country.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -12,6 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB('mappu.db');
+
     return _database!;
   }
 
@@ -19,10 +24,36 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 6, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
+
+
+    await db.execute(
+      'DROP TABLE IF EXISTS postcards',
+    );
+
+    await db.execute(
+      'DROP TABLE IF EXISTS readArticles',
+    );
+
+    await db.execute(
+      'DROP TABLE IF EXISTS exploredCountries',
+    );
+
+    await db.execute(
+      'CREATE TABLE postcards('
+          'postcardId TEXT PRIMARY KEY,'
+          'name TEXT,'
+          'description TEXT,'
+          'iconPath TEXT,'
+          'earned INTEGER,'
+          'earnedAt TEXT,'
+          'minCountries INTEGER,'
+          'minArticles INTEGER)',
+    );
+
     await db.execute(
       'CREATE TABLE savedArticles('
           'articleId TEXT PRIMARY KEY,'
@@ -46,11 +77,106 @@ class DatabaseHelper {
           'countryId TEXT PRIMARY KEY,'
           'exploredAt TEXT)',
     );
+
+    await initializePostcards(db);
   }
 
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  // Methods for Postcard
+  // Populate the postcards database with pre-defined postcards
+  Future<void> initializePostcards(Database db) async {
+    List<Postcard> _postcards = [];
+
+    final String response = await rootBundle.loadString('assets/postcards/postcards.json');
+    final data = await jsonDecode(response);
+    _postcards = data.map<Postcard>((item) => (Postcard.fromJson(item))).toList();
+
+    for (final Postcard postcard in _postcards) {
+      await db.insert(
+        'postcards',
+        postcard.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+
+  Future<void> insertPostcard(Postcard postcard) async {
+    final db = await instance.database;
+
+    await db.insert(
+      'postcards',
+      postcard.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<int> getPostcardsCount() async {
+    final db = await instance.database;
+
+    var count = Sqflite
+        .firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM postcards'));
+    return count?? 0;
+  }
+
+  Future<List<Postcard>> getPostcards() async {
+    final db = await instance.database;
+
+    final List<Map<String, dynamic>> maps = await db.query('postcards');
+    return List.generate(maps.length, (i) {
+      return Postcard(
+        postcardId: maps[i]['postcardId'],
+        name: maps[i]['name'],
+        description: maps[i]['description'],
+        iconPath: maps[i]['iconPath'],
+        earned: maps[i]['earned'] == 0 ? false : true,
+        earnedAt: maps[i]['earnedAt'] != null ? DateTime.parse(maps[i]['earnedAt']) : null,
+        minCountries: maps[i]['minCountries'],
+        minArticles: maps[i]['minArticles'],
+      );
+    });
+  }
+
+  Future<void> updatePostcard(Postcard postcard) async {
+    final db = await instance.database;
+
+    await db.update(
+      'postcards',
+      postcard.toMap(),
+      where: 'postcardId = ?',
+      whereArgs: [postcard.postcardId],
+    );
+  }
+
+  Future<void> deletePostcard(String postcardId) async {
+    final db = await instance.database;
+
+    await db.delete(
+      'postcards',
+      where: 'postcardId = ?',
+      whereArgs: [postcardId],
+    );
+  }
+
+  // Method for unlocking postcards
+  Future<void> checkPostcardStatus() async {
+    int numArticlesRead = await getReadArticlesCount();
+    int numCountriesExplored = await getExploredCountriesCount();
+
+    List<Postcard> postcards = await getPostcards();
+    for (Postcard postcard in postcards) {
+      if (!postcard.earned
+          && numArticlesRead >= postcard.minArticles
+          && numCountriesExplored >= postcard.minCountries) {
+        print('Unlocked postcard id: ${postcard.postcardId}');
+        postcard.earned = true;
+        postcard.earnedAt = DateTime.now();
+        updatePostcard(postcard);
+      }
+    }
   }
 
   // Methods for SavedArticle
@@ -113,6 +239,8 @@ class DatabaseHelper {
       readArticle.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+
+    checkPostcardStatus();
   }
 
   Future<List<ReadArticle>> getReadArticles() async {
@@ -166,6 +294,8 @@ class DatabaseHelper {
       exploredCountry.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+
+    checkPostcardStatus();
   }
 
   Future<List<ExploredCountry>> getExploredCountries() async {
@@ -216,7 +346,5 @@ class DatabaseHelper {
     await db.delete('readArticles');
     await db.delete('savedArticles');
     await db.delete('exploredCountries');
-
-    print("done");
   }
 }

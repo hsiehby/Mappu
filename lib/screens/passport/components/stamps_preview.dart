@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:mappu/models/stamp.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:mappu/models/postcard.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mappu/screens/passport/components/stamps_cabinet.dart';
+import 'package:mappu/db/database_helper.dart';
 
-class StampsPreview extends StatefulWidget {
-  const StampsPreview({Key? key}) : super(key: key);
+class PostcardsPreview extends StatefulWidget {
+  const PostcardsPreview({Key? key}) : super(key: key);
 
   @override
-  _StampsPreviewState createState() => _StampsPreviewState();
+  _PostcardsPreviewState createState() => _PostcardsPreviewState();
 }
 
-class _StampsPreviewState extends State<StampsPreview> {
-  List<Stamp> _stamps = [];
+class _PostcardsPreviewState extends State<PostcardsPreview> {
+  List<Postcard> _postcards = [];
 
-  Future<void> loadStamps() async {
-    if (_stamps.isEmpty) {
-      final String response = await rootBundle.loadString('assets/stamps/stamps.json');
-      final data = await jsonDecode(response);
-      final List<Stamp> stamps = data.map<Stamp>((item) => (Stamp.fromJson(item))).toList();
+  Future<void> loadPostcards() async {
+    final dbHelper = DatabaseHelper.instance;
+    if (_postcards.isEmpty) {
+      final List<Postcard> postcards = await dbHelper.getPostcards();
       setState(() {
-        _stamps = stamps;
+        _postcards = postcards;
       });
     }
   }
@@ -30,16 +28,16 @@ class _StampsPreviewState extends State<StampsPreview> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
       child: Container(
-        foregroundDecoration: _stamps[index].earned ? null
+        foregroundDecoration: _postcards[index].earned ? null
             : const BoxDecoration(
           color: Colors.grey,
           backgroundBlendMode: BlendMode.saturation,
         ),
         child: Opacity(
-            opacity: _stamps[index].earned ? 1.0 : 0.25,
+            opacity: _postcards[index].earned ? 1.0 : 0.25,
             child: CircleAvatar(
                 radius: 40.0,
-                backgroundImage: AssetImage(_stamps[index].iconPath)
+                backgroundImage: AssetImage(_postcards[index].iconPath)
             )
         ),
       ),
@@ -48,7 +46,7 @@ class _StampsPreviewState extends State<StampsPreview> {
 
   Widget buildStampsList() {
     return FutureBuilder(
-        future: loadStamps(),
+        future: loadPostcards(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitWanderingCubes(
@@ -60,7 +58,7 @@ class _StampsPreviewState extends State<StampsPreview> {
           } else {
             return ListView(
               scrollDirection: Axis.horizontal,
-              children: List.generate(_stamps.length, (index) {
+              children: List.generate(_postcards.length, (index) {
                 return buildStamp(index);
               })
             );
