@@ -10,6 +10,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:mappu/components/map_view.dart';
 import 'package:mappu/main.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 const NO_LAT_LNG = LatLng(90, 91);
 
@@ -21,6 +22,8 @@ class ExploreWidget extends StatefulWidget {
 }
 
 class _ExploreWidgetState extends State<ExploreWidget> {
+  GlobalKey _one = GlobalKey();
+
   final ChromeSafariBrowser browser = ArticleReader();
   final FloatingSearchBarController searchBarController = FloatingSearchBarController();
 
@@ -45,6 +48,10 @@ class _ExploreWidgetState extends State<ExploreWidget> {
 
     fToast = FToast();
     fToast.init(globalKey.currentState!.context);
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+        ShowCaseWidget.of(context)!.startShowCase([_one])
+    );
   }
 
   updateLocation(String country, LatLng newLatLng) {
@@ -107,7 +114,9 @@ class _ExploreWidgetState extends State<ExploreWidget> {
             child: ArticlesSheet(browser: browser,
               articles: articles,
               location: location,
-              showToast: showToast,)
+              showToast: showToast,
+              articleKey: _one,
+            )
         ),
         SearchBar(
           controller: searchBarController,

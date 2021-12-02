@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'screens/explore/explore.dart';
 import 'screens/saved/saved.dart';
 import 'screens/passport/passport.dart';
@@ -33,7 +34,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
-      body: _children[_currentIndex],
+      body: ShowCaseWidget(
+          builder: Builder(builder: (context) => _children[_currentIndex],)
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
