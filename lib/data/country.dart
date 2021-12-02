@@ -474,7 +474,7 @@ var countryDetails = {
   "SY": Country(
       name: "Syrian Arab Republic", latlng: LatLng(35, 38), continent: "Asia"),
   "TW": Country(
-      name: "Taiwan, Province of China",
+      name: "Taiwan",
       latlng: LatLng(23.5, 121),
       continent: "Asia"),
   "TJ": Country(name: "Tajikistan", latlng: LatLng(39, 71), continent: "Asia"),
