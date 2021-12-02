@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500)),
+                      // Text(name, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w500)),
                       Text(
                           "Level ${snapshot.data!.level} ${snapshot.data!.title}",
                           style: const TextStyle(

@@ -105,7 +105,7 @@ class _PostcardsPreviewState extends State<PostcardsPreview> {
                       MaterialPageRoute(builder: (context) => StampsCabinet()),
                     );
                   },
-                  child: const Text('View All'),
+                  child: const Text('View All', ),
                 ),
               ),
             ),

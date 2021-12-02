@@ -39,8 +39,16 @@ class _HomeState extends State<Home> {
       key: globalKey,
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xffededed),
+        selectedItemColor: Color(0xffff8f51),
         onTap: onTabTapped,
         currentIndex: _currentIndex,
+        unselectedLabelStyle: GoogleFonts.notoSans(
+          fontWeight: FontWeight.w700,
+        ),
+        selectedLabelStyle: GoogleFonts.notoSans(
+          fontWeight: FontWeight.w800,
+        ),
         items: [
           BottomNavigationBarItem(
             icon: _currentIndex == 0 ?

@@ -71,7 +71,7 @@ class ArticlesSheet extends StatelessWidget {
                         articles[index].source,
                         style: TextStyle(
                           fontSize: 12.0,
-                          color: Colors.grey[700],
+                          color: Colors.orange,
                           fontWeight: FontWeight.w500,
                         )
                     ),

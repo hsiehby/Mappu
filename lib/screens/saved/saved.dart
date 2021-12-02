@@ -34,22 +34,22 @@ class SavedWidget extends StatelessWidget {
               }),
               isScrollable: true,
               indicatorColor: Colors.transparent,
-              unselectedLabelColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
               indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: Colors.brown, width: 2.0),
+                borderSide: BorderSide(color: Color(0xffff8f51), width: 2.0),
               ),
-              labelColor: Colors.brown,
+              labelColor: Color(0xffff8f51),
             ),
             title: Text(
               'Your Saved Articles',
               style: GoogleFonts.notoSans(),
             ),
-            backgroundColor: Colors.orange,
+            backgroundColor: Colors.grey.shade50,
             elevation: 1,
-            titleTextStyle: const TextStyle(
-              color: Colors.brown,
+            titleTextStyle: TextStyle(
+              color: Colors.grey.shade800,
               fontSize: 20.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w800,
             )),
         body: TabBarView(
             children: List<Widget>.generate(continents.length, (int index) {
